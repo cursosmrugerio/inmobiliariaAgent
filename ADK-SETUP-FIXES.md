@@ -1,13 +1,13 @@
 # ADK Integration Build Fixes
 
-**Date:** 2025-10-27
-**Status:** ✅ RESOLVED - Build Successful
+**Date:** 2025-10-27 (Updated: 2025-10-28)
+**Status:** ✅ RESOLVED - All Issues Fixed
 
 ---
 
 ## Issue Summary
 
-The initial ADK integration failed to build due to incorrect dependency coordinates and API changes in ADK 0.3.0.
+The ADK integration encountered 8 issues during implementation, including build failures, runtime errors, and type mismatches. All issues have been systematically resolved.
 
 ---
 
@@ -210,6 +210,46 @@ google.cloud.location=${GOOGLE_CLOUD_LOCATION:us-central1}
 
 **See:** `VERTEX-AI-SETUP.md` for complete details
 
+### 8. **FunctionTool Type Mismatch (Runtime Error)**
+
+**Error:**
+```
+java.lang.IllegalArgumentException: argument type mismatch
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke
+	at com.google.adk.tools.FunctionTool.call(FunctionTool.java:232)
+```
+
+**Cause:** ADK's FunctionTool passes `Integer` when parsing JSON numeric values from the LLM's tool calls, but the tool methods were defined to accept `Long` parameters.
+
+**Example:** When the LLM calls `getInmobiliariaById` with `{"id": 1}`, ADK deserializes the JSON number `1` as an `Integer`, but the method signature was:
+```java
+public Map<String, Object> getInmobiliariaById(Long id)  // Expected Long
+```
+
+**Resolution:** Changed tool method parameters from `Long` to `Integer` and convert to `Long` when calling the service layer:
+
+**Before:**
+```java
+public Map<String, Object> getInmobiliariaById(Long id) {
+    InmobiliariaResponse inmobiliaria = inmobiliariaService.findById(id);
+    // ...
+}
+```
+
+**After:**
+```java
+public Map<String, Object> getInmobiliariaById(Integer id) {
+    InmobiliariaResponse inmobiliaria = inmobiliariaService.findById(id.longValue());
+    // ...
+}
+```
+
+**Files Modified:**
+- `InmobiliariaTool.java` - Changed `getInmobiliariaById`, `updateInmobiliaria`, and `deleteInmobiliaria` to accept `Integer` instead of `Long`
+- `InmobiliariaToolTest.java` - Updated test calls to use `Integer` literals (e.g., `1` instead of `1L`)
+
+**Key Learning:** ADK FunctionTool uses standard JSON deserialization, which defaults numeric values to `Integer` for small numbers. Always use `Integer` for ID parameters in tool methods, and convert to `Long` when calling service layers that use `Long` for database IDs.
+
 ---
 
 ## Final Working Configuration
@@ -317,6 +357,8 @@ mvn clean install -DskipTests
 4. **Package structure matters** - classes moved to more logical packages
 5. **Text blocks may cause formatter issues** - use traditional strings if needed
 6. **Lombok issues with Java 25** - manual logger declaration works reliably
+7. **Vertex AI requires explicit configuration** - Set `GOOGLE_GENAI_USE_VERTEXAI=true` to use service account credentials instead of API keys
+8. **FunctionTool uses Integer for numeric values** - Use `Integer` for ID parameters in tool methods, not `Long`, and convert when calling service layers
 
 ---
 

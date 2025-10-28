@@ -53,9 +53,9 @@ public class InmobiliariaTool {
           "Get details of a specific real estate agency by its ID. Use this when the user asks"
               + " about a specific agency.")
   public Map<String, Object> getInmobiliariaById(
-      @Schema(description = "The ID of the inmobiliaria to retrieve", example = "1") Long id) {
+      @Schema(description = "The ID of the inmobiliaria to retrieve", example = "1") Integer id) {
     try {
-      InmobiliariaResponse inmobiliaria = inmobiliariaService.findById(id);
+      InmobiliariaResponse inmobiliaria = inmobiliariaService.findById(id.longValue());
       Map<String, Object> result = new HashMap<>();
       result.put("success", true);
       result.put("inmobiliaria", inmobiliaria);
@@ -123,7 +123,7 @@ public class InmobiliariaTool {
               + " information.")
   public Map<String, Object> updateInmobiliaria(
       @Schema(description = "The ID of the inmobiliaria to update", example = "1", required = true)
-          Long id,
+          Integer id,
       @Schema(description = "Updated commercial name", example = "Inmobiliaria del Sur")
           String nombre,
       @Schema(description = "Updated RFC", example = "XAXX010101000") String rfc,
@@ -134,7 +134,7 @@ public class InmobiliariaTool {
     try {
       UpdateInmobiliariaRequest request =
           new UpdateInmobiliariaRequest(nombre, rfc, nombreContacto, correo, telefono);
-      InmobiliariaResponse updated = inmobiliariaService.update(id, request);
+      InmobiliariaResponse updated = inmobiliariaService.update(id.longValue(), request);
       Map<String, Object> result = new HashMap<>();
       result.put("success", true);
       result.put("message", "Inmobiliaria updated successfully");
@@ -157,9 +157,9 @@ public class InmobiliariaTool {
               + " system.")
   public Map<String, Object> deleteInmobiliaria(
       @Schema(description = "The ID of the inmobiliaria to delete", example = "1", required = true)
-          Long id) {
+          Integer id) {
     try {
-      inmobiliariaService.delete(id);
+      inmobiliariaService.delete(id.longValue());
       Map<String, Object> result = new HashMap<>();
       result.put("success", true);
       result.put("message", "Inmobiliaria with ID " + id + " deleted successfully");

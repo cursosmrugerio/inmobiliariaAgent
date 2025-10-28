@@ -76,7 +76,7 @@ class InmobiliariaToolTest {
     when(inmobiliariaService.findById(1L)).thenReturn(sampleResponse);
 
     // When
-    Map<String, Object> result = inmobiliariaTool.getInmobiliariaById(1L);
+    Map<String, Object> result = inmobiliariaTool.getInmobiliariaById(1);
 
     // Then
     assertTrue((Boolean) result.get("success"));
@@ -90,7 +90,7 @@ class InmobiliariaToolTest {
     when(inmobiliariaService.findById(999L)).thenThrow(new ResourceNotFoundException("Not found"));
 
     // When
-    Map<String, Object> result = inmobiliariaTool.getInmobiliariaById(999L);
+    Map<String, Object> result = inmobiliariaTool.getInmobiliariaById(999);
 
     // Then
     assertFalse((Boolean) result.get("success"));
@@ -143,7 +143,7 @@ class InmobiliariaToolTest {
     // When
     Map<String, Object> result =
         inmobiliariaTool.updateInmobiliaria(
-            1L, "Updated Name", "NEW123456789", "New Contact", "new@example.com", "+52-55-9999");
+            1, "Updated Name", "NEW123456789", "New Contact", "new@example.com", "+52-55-9999");
 
     // Then
     assertTrue((Boolean) result.get("success"));
@@ -160,7 +160,7 @@ class InmobiliariaToolTest {
 
     // When
     Map<String, Object> result =
-        inmobiliariaTool.updateInmobiliaria(999L, "Test", null, null, null, null);
+        inmobiliariaTool.updateInmobiliaria(999, "Test", null, null, null, null);
 
     // Then
     assertFalse((Boolean) result.get("success"));
@@ -173,7 +173,7 @@ class InmobiliariaToolTest {
     doNothing().when(inmobiliariaService).delete(1L);
 
     // When
-    Map<String, Object> result = inmobiliariaTool.deleteInmobiliaria(1L);
+    Map<String, Object> result = inmobiliariaTool.deleteInmobiliaria(1);
 
     // Then
     assertTrue((Boolean) result.get("success"));
@@ -187,7 +187,7 @@ class InmobiliariaToolTest {
     doThrow(new ResourceNotFoundException("Not found")).when(inmobiliariaService).delete(999L);
 
     // When
-    Map<String, Object> result = inmobiliariaTool.deleteInmobiliaria(999L);
+    Map<String, Object> result = inmobiliariaTool.deleteInmobiliaria(999);
 
     // Then
     assertFalse((Boolean) result.get("success"));
