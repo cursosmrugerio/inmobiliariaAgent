@@ -1,4 +1,4 @@
-The AI Constitution for the User Management Service
+The AI Constitution for the Inmobiliaria Management System
 
 This file serves as a persistent system prompt and contextual guide for any AI assistant working on this project. Adherence to these guidelines is crucial for maintaining code quality, consistency, and alignment with our architectural vision. This document is the single source of truth for project standards.
 
@@ -22,10 +22,9 @@ This file serves as a persistent system prompt and contextual guide for any AI a
     * `service`: Contains the core business logic. Orchestrates calls to repositories and other services. Manages transactions with `@Transactional`.
     * `repository`: Data access layer. Use Spring Data JPA interfaces extending `JpaRepository`. Avoid complex queries here; use Specification or Querydsl for dynamic queries.
     * `model` or `domain`: Contains the JPA entity classes. These represent the core domain objects.
-    * `dto`: Data Transfer Objects. Use records for immutability. These are used for API request/response payloads to decouple the API layer from the domain model.
-    * `config`: Spring configuration classes (e.g., `SecurityConfig`).
+    * `dto`: Data Transfer Objects. Currently implemented as final classes with manual constructors for immutability and validation compatibility. These are used for API request/response payloads to decouple the API layer from the domain model.
+    * `config`: Spring configuration classes (e.g., `SecurityConfig`, `AgentConfig`). Security-related components currently reside here.
     * `exception`: Custom exception classes and global exception handlers (`@RestControllerAdvice`).
-    * `security`: Security-related components like JWT utilities, user details services, etc.
 
 ## 3. Code Style and Conventions
 
@@ -34,13 +33,14 @@ This file serves as a persistent system prompt and contextual guide for any AI a
     * Classes & Records: `PascalCase` (e.g., `UserProfileController`)
     * Methods & Variables: `camelCase` (e.g., `findUserById`)
     * Constants: `UPPER_SNAKE_CASE` (e.g., `MAX_LOGIN_ATTEMPTS`)
-    * REST Endpoints: Plural nouns for resources (e.g., `/users`, `/users/{userId}/profiles`)
+    * REST Endpoints: Plural nouns for resources (e.g., `/inmobiliarias`, `/inmobiliarias/{id}`). The `/api` prefix is optional; agent endpoints use `/api/agent/*` while entity CRUD endpoints may omit it.
 * **Logging:**
     * Use **SLF4J** with Logback (provided by default).
-    * Use the `@Slf4j` annotation from Lombok to get a logger instance.
+    * Initialize loggers manually: `private static final Logger log = LoggerFactory.getLogger(ClassName.class);`
+    * Note: While Lombok's `@Slf4j` is available, the current codebase uses manual logger initialization for compatibility.
     * Log meaningful messages. Use parameterized logging (`log.info("User {} created", userId);`) instead of string concatenation.
-* **Null Handling:** Use `java.util.Optional` for return types where a value may be absent, especially in the service and repository layers. Avoid returning `null`.
-* **Immutability:** Prefer immutable objects, especially for DTOs. Use Java `record` for DTOs and configuration properties (`@ConfigurationProperties`).
+* **Null Handling:** Use `java.util.Optional` internally (especially in repository operations). Service layer methods should throw domain-specific exceptions (e.g., `ResourceNotFoundException`) instead of returning `Optional<T>`, allowing the global exception handler to provide clear error messages. Avoid returning `null`.
+* **Immutability:** Prefer immutable objects, especially for DTOs. While Java `record` is recommended for new code, the current codebase uses final classes with manual constructors for DTOs to maintain compatibility with validation annotations. Both patterns are acceptable.
 
 ## 4. Technology Stack & Dependency Rules
 
@@ -61,7 +61,7 @@ This file serves as a persistent system prompt and contextual guide for any AI a
     * **Development:** H2 in-memory database.
     * **Production:** PostgreSQL.
     * **Migrations:** Use **Flyway** or **Liquibase** for schema management (Flyway is preferred).
-* **Lombok:** Use Lombok extensively to reduce boilerplate code (`@Data`, `@Builder`, `@NoArgsConstructor`, `@AllArgsConstructor`, `@Slf4j`).
+* **Lombok:** Lombok dependency is available but currently not used in the codebase. The project uses manual implementations for constructors, getters/setters, and loggers. If adding Lombok annotations in the future, ensure annotation processing is properly configured in your IDE.
 
 ## 5. AI Assistant Directives
 
@@ -93,7 +93,7 @@ This file serves as a persistent system prompt and contextual guide for any AI a
 
 * **Dependencies:** Use Google ADK 0.3.0 (`google-adk` and `google-adk-dev` artifacts). RxJava is included transitively.
 
-* **Model Configuration:** Agents use **Gemini 2.0 Flash** via Vertex AI. Configure in agent classes using `LlmAgent.builder().model("gemini-2.0-flash-001")`.
+* **Model Configuration:** Agents use **Gemini 2.0 Flash** via Vertex AI. Configure in agent classes using `LlmAgent.builder().model("gemini-2.0-flash")`.
 
 * **Documentation Alignment:** Before extending or creating CRUD agents, review:
   - `docs/README-AGENT.md` for architecture and usage patterns
