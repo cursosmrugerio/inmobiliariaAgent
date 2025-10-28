@@ -1,1 +1,9 @@
 **/.DS_Store
+.idea/
+*.iml
+target/
+.mvn/
+mvnw
+mvnw.cmd
+*.log
+*.tmp
