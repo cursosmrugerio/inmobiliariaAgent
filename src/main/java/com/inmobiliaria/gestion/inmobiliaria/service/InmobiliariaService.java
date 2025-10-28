@@ -80,11 +80,21 @@ public class InmobiliariaService {
       String nombreContacto,
       String correo,
       String telefono) {
-    entity.setNombre(nombre);
-    entity.setRfc(rfc);
-    entity.setNombreContacto(nombreContacto);
-    entity.setCorreo(correo);
-    entity.setTelefono(telefono);
+    if (nombre != null) {
+      entity.setNombre(nombre);
+    }
+    if (rfc != null) {
+      entity.setRfc(rfc);
+    }
+    if (nombreContacto != null) {
+      entity.setNombreContacto(nombreContacto);
+    }
+    if (correo != null) {
+      entity.setCorreo(correo);
+    }
+    if (telefono != null) {
+      entity.setTelefono(telefono);
+    }
   }
 
   private InmobiliariaResponse toResponse(Inmobiliaria entity) {

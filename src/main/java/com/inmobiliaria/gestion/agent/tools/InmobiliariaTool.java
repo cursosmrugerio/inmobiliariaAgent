@@ -107,30 +107,47 @@ public class InmobiliariaTool {
   }
 
   /**
-   * Update an existing real estate agency.
+   * Update an existing real estate agency. This supports PARTIAL updates - only provide the fields
+   * you want to change. Fields that are not provided (null) will retain their current values.
    *
-   * @param id The ID of the inmobiliaria to update
-   * @param nombre Updated commercial name
-   * @param rfc Updated RFC
-   * @param nombreContacto Updated contact person name
-   * @param correo Updated email
-   * @param telefono Updated phone number
+   * @param id The ID of the inmobiliaria to update (required)
+   * @param nombre Updated commercial name (optional - if null, current value is preserved)
+   * @param rfc Updated RFC (optional - if null, current value is preserved)
+   * @param nombreContacto Updated contact person name (optional - if null, current value is
+   *     preserved)
+   * @param correo Updated email (optional - if null, current value is preserved)
+   * @param telefono Updated phone number (optional - if null, current value is preserved)
    * @return Map containing the updated inmobiliaria or error
    */
   @Schema(
       description =
-          "Update an existing real estate agency. Use this when the user wants to modify agency"
-              + " information.")
+          "Update an existing real estate agency. Supports PARTIAL updates - only provide the"
+              + " fields you want to change. Fields not provided will keep their current values."
+              + " Use this when the user wants to modify specific agency information without"
+              + " requiring all fields.")
   public Map<String, Object> updateInmobiliaria(
       @Schema(description = "The ID of the inmobiliaria to update", example = "1", required = true)
           Integer id,
-      @Schema(description = "Updated commercial name", example = "Inmobiliaria del Sur")
+      @Schema(
+              description = "Updated commercial name (optional - omit to keep current value)",
+              example = "Inmobiliaria del Sur")
           String nombre,
-      @Schema(description = "Updated RFC", example = "XAXX010101000") String rfc,
-      @Schema(description = "Updated contact person name", example = "María García")
+      @Schema(
+              description = "Updated RFC (optional - omit to keep current value)",
+              example = "XAXX010101000")
+          String rfc,
+      @Schema(
+              description = "Updated contact person name (optional - omit to keep current value)",
+              example = "María García")
           String nombreContacto,
-      @Schema(description = "Updated email", example = "nuevo@ejemplo.com") String correo,
-      @Schema(description = "Updated phone number", example = "+52-55-9876-5432") String telefono) {
+      @Schema(
+              description = "Updated email (optional - omit to keep current value)",
+              example = "nuevo@ejemplo.com")
+          String correo,
+      @Schema(
+              description = "Updated phone number (optional - omit to keep current value)",
+              example = "+52-55-9876-5432")
+          String telefono) {
     try {
       UpdateInmobiliariaRequest request =
           new UpdateInmobiliariaRequest(nombre, rfc, nombreContacto, correo, telefono);

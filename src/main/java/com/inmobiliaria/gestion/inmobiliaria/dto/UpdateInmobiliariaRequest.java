@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Schema(description = "Payload para actualizar una inmobiliaria existente")
@@ -30,8 +29,9 @@ public final class UpdateInmobiliariaRequest {
     this.telefono = telefono;
   }
 
-  @Schema(description = "Nombre comercial de la inmobiliaria", example = "Grupo Habitat")
-  @NotBlank(message = "El nombre es obligatorio")
+  @Schema(
+      description = "Nombre comercial de la inmobiliaria (opcional para actualización parcial)",
+      example = "Grupo Habitat")
   public String getNombre() {
     return nombre;
   }
