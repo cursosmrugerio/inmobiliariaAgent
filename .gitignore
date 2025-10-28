@@ -7,3 +7,6 @@ mvnw
 mvnw.cmd
 *.log
 *.tmp
+
+# Google Cloud credentials - NEVER commit
+credentials.json
