@@ -70,9 +70,30 @@ public class AgentController {
               ? request.getSessionId()
               : "user-" + UUID.randomUUID();
 
-      // Create or get session
-      Session session =
-          agentRunner.sessionService().createSession(agentRunner.appName(), userId).blockingGet();
+      // Get existing session or create new one if it doesn't exist
+      Session session;
+      try {
+        // Try to retrieve an existing session first
+        var listResponse =
+            agentRunner.sessionService().listSessions(agentRunner.appName(), userId).blockingGet();
+        var sessions = listResponse.sessions();
+
+        if (sessions != null && !sessions.isEmpty()) {
+          session = sessions.get(0);
+          log.debug("Retrieved existing session for user '{}'", userId);
+        } else {
+          log.debug("No existing session found, creating new session for user '{}'", userId);
+          session =
+              agentRunner
+                  .sessionService()
+                  .createSession(agentRunner.appName(), userId)
+                  .blockingGet();
+        }
+      } catch (Exception e) {
+        log.debug("Error checking for session, creating new one for user '{}'", userId);
+        session =
+            agentRunner.sessionService().createSession(agentRunner.appName(), userId).blockingGet();
+      }
 
       // Build user content
       Content userContent = Content.fromParts(Part.fromText(request.getMessage()));
