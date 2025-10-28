@@ -18,59 +18,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * REST Controller for conversational AI agent interactions. Provides endpoints for chatting with
- * the Inmobiliaria AI agent using natural language.
- */
+/** REST controller exposing the Propiedad conversational agent. */
 @RestController
-@RequestMapping("/api/agent")
-@Tag(
-    name = "AI Agent",
-    description = "Conversational AI agent for managing inmobiliarias via natural language")
-public class AgentController {
+@RequestMapping("/api/agent/propiedades")
+@Tag(name = "Propiedad AI Agent", description = "Conversational agent for managing propiedades")
+public class PropiedadAgentController {
 
-  private static final Logger log = LoggerFactory.getLogger(AgentController.class);
+  private static final Logger log = LoggerFactory.getLogger(PropiedadAgentController.class);
 
   private final InMemoryRunner agentRunner;
   private final AgentChatService chatService;
 
-  public AgentController(
-      @Qualifier("inmobiliariaAgentRunner") InMemoryRunner agentRunner,
-      AgentChatService chatService) {
+  public PropiedadAgentController(
+      @Qualifier("propiedadAgentRunner") InMemoryRunner agentRunner, AgentChatService chatService) {
     this.agentRunner = agentRunner;
     this.chatService = chatService;
   }
 
-  /**
-   * Chat with the Inmobiliaria AI agent. Send natural language queries to perform CRUD operations
-   * on real estate agencies.
-   *
-   * @param request The chat request containing the user's message
-   * @return ChatResponse with the agent's response
-   */
   @PostMapping("/chat")
   @Operation(
-      summary = "Chat with the AI agent",
+      summary = "Chat with the Propiedad AI agent",
       description =
-          "Send a natural language message to the AI agent to manage inmobiliarias. "
-              + "Examples: 'List all agencies', 'Create agency named X', 'Update agency 1', etc.")
-  @ApiResponse(responseCode = "200", description = "Agent response received successfully")
-  @ApiResponse(responseCode = "400", description = "Invalid request")
+          "Send a natural language message to perform CRUD operations on properties "
+              + "(propiedades). Examples: 'Crear una propiedad ...', 'Actualiza la propiedad 5', "
+              + "'Muestra las propiedades de la inmobiliaria 2'.")
+  @ApiResponse(responseCode = "200", description = "Agent response generated successfully")
+  @ApiResponse(responseCode = "400", description = "Invalid request payload")
   @ApiResponse(responseCode = "500", description = "Agent execution error")
   public ResponseEntity<ChatResponse> chat(@Valid @RequestBody ChatRequest request) {
     log.info(
-        "Received chat request: message='{}', sessionId='{}'",
+        "Received propiedad chat request: message='{}', sessionId='{}'",
         request.getMessage(),
         request.getSessionId());
-
     try {
       ChatResponse response = chatService.executeChat(agentRunner, request);
-      log.info("Agent response generated successfully for session '{}'", response.getSessionId());
+      log.info(
+          "Propiedad agent response generated successfully for session '{}'",
+          response.getSessionId());
       return ResponseEntity.ok(response);
-    } catch (AgentChatException e) {
-      log.error("Unexpected error in chat endpoint", e);
+    } catch (AgentChatException ex) {
+      log.error("Unexpected error in propiedad chat endpoint", ex);
       return ResponseEntity.status(500)
-          .body(ChatResponse.error("Unexpected error: " + e.getMessage(), null));
+          .body(ChatResponse.error("Unexpected error: " + ex.getMessage(), null));
     }
   }
 }

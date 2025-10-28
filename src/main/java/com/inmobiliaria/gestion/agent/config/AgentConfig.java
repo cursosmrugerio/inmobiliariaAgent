@@ -2,6 +2,7 @@ package com.inmobiliaria.gestion.agent.config;
 
 import com.google.adk.runner.InMemoryRunner;
 import com.inmobiliaria.gestion.agent.InmobiliariaAgent;
+import com.inmobiliaria.gestion.agent.PropiedadAgent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,8 +20,13 @@ public class AgentConfig {
    * @param inmobiliariaAgent The configured Inmobiliaria agent
    * @return InMemoryRunner configured with the agent
    */
-  @Bean
-  public InMemoryRunner agentRunner(InmobiliariaAgent inmobiliariaAgent) {
+  @Bean(name = "inmobiliariaAgentRunner")
+  public InMemoryRunner inmobiliariaAgentRunner(InmobiliariaAgent inmobiliariaAgent) {
     return new InMemoryRunner(inmobiliariaAgent.getAgent());
+  }
+
+  @Bean(name = "propiedadAgentRunner")
+  public InMemoryRunner propiedadAgentRunner(PropiedadAgent propiedadAgent) {
+    return new InMemoryRunner(propiedadAgent.getAgent());
   }
 }
