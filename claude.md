@@ -75,4 +75,11 @@ This file serves as a persistent system prompt and contextual guide for any AI a
 * **Code Generation Priority:** Prioritize using Spring Data JPA query methods (`findBy...`) over custom `@Query` annotations. For complex queries, use the JPA Criteria API.
 * **Dependency Suggestions:** Do not suggest adding new Maven dependencies unless explicitly asked. The existing stack is curated.
 
+## 6. Conversational Agent Modules
+
+* **Package Layout:** Place agent components under `com.inmobiliaria.gestion.agent`, using subpackages such as `agent.controller`, `agent.tools`, and `agent.dto`. Keep Feature-specific domain logic in the existing bounded context packages (e.g., `com.inmobiliaria.gestion.inmobiliaria`).
+* **Patterns:** Every conversational module must expose Spring `FunctionTool` wrappers around service-layer operations, register them with an `LlmAgent`, and wire the agent through an `InMemoryRunner` bean. Controllers remain thin REST adapters that delegate to the runner.
+* **Documentation Alignment:** Before extending or creating CRUD agents, review `docs/README-AGENT.md` for architecture/usage expectations, `docs/vertex-ai.md` for Vertex AI configuration, and `docs/generatedXclaude/README-TESTING.md` for testing workflow details.
+* **Environment Requirements:** Ensure the following environment variables are available whenever conversational agent tests run: `GOOGLE_GENAI_USE_VERTEXAI`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, and `GOOGLE_APPLICATION_CREDENTIALS`. These are prerequisites for the scripts and integration tests in `scripts/test-agent_inmobiliarias.sh`.
+* **Testing:** New or updated agent logic must be covered by the shell-based regression suite (`scripts/test-agent_inmobiliarias.sh`) and corresponding unit/integration tests under `src/test/java`. Keep session-dependent flows deterministic by resetting the H2 database with the provided helpers when needed.
 
