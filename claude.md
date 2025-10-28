@@ -77,9 +77,46 @@ This file serves as a persistent system prompt and contextual guide for any AI a
 
 ## 6. Conversational Agent Modules
 
-* **Package Layout:** Place agent components under `com.inmobiliaria.gestion.agent`, using subpackages such as `agent.controller`, `agent.tools`, and `agent.dto`. Keep Feature-specific domain logic in the existing bounded context packages (e.g., `com.inmobiliaria.gestion.inmobiliaria`).
+* **Purpose:** Conversational agents provide natural language interfaces to domain operations using Google's Agent Development Kit (ADK) with Vertex AI.
+
+* **Package Layout:** Place agent components under `com.inmobiliaria.gestion.agent`, using subpackages such as `agent.controller`, `agent.tools`, and `agent.dto`. **Keep domain entities, services, and repositories in their existing bounded context packages** (e.g., `com.inmobiliaria.gestion.inmobiliaria`). The agent layer should be thin wrappers that delegate to existing service methods.
+
+  Example for PropertyAgent:
+  ```
+  com.inmobiliaria.gestion.agent.tools.PropertyTool
+  com.inmobiliaria.gestion.agent.PropertyAgent
+  com.inmobiliaria.gestion.agent.config.AgentConfig (shared)
+  com.inmobiliaria.gestion.propiedad.service.PropertyService (existing)
+  ```
+
 * **Patterns:** Every conversational module must expose Spring `FunctionTool` wrappers around service-layer operations, register them with an `LlmAgent`, and wire the agent through an `InMemoryRunner` bean. Controllers remain thin REST adapters that delegate to the runner.
-* **Documentation Alignment:** Before extending or creating CRUD agents, review `docs/README-AGENT.md` for architecture/usage expectations, `docs/vertex-ai.md` for Vertex AI configuration, and `docs/generatedXclaude/README-TESTING.md` for testing workflow details.
-* **Environment Requirements:** Ensure the following environment variables are available whenever conversational agent tests run: `GOOGLE_GENAI_USE_VERTEXAI`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, and `GOOGLE_APPLICATION_CREDENTIALS`. These are prerequisites for the scripts and integration tests in `scripts/test-agent_inmobiliarias.sh`.
-* **Testing:** New or updated agent logic must be covered by the shell-based regression suite (`scripts/test-agent_inmobiliarias.sh`) and corresponding unit/integration tests under `src/test/java`. Keep session-dependent flows deterministic by resetting the H2 database with the provided helpers when needed.
+
+* **Dependencies:** Use Google ADK 0.3.0 (`google-adk` and `google-adk-dev` artifacts). RxJava is included transitively.
+
+* **Model Configuration:** Agents use **Gemini 2.0 Flash** via Vertex AI. Configure in agent classes using `LlmAgent.builder().model("gemini-2.0-flash-001")`.
+
+* **Documentation Alignment:** Before extending or creating CRUD agents, review:
+  - `docs/README-AGENT.md` for architecture and usage patterns
+  - `docs/vertex-ai.md` for Vertex AI configuration details
+  - `docs/generatedXclaude/README-TESTING.md` for testing workflow and best practices
+
+* **Environment Requirements:** Ensure the following environment variables are available whenever conversational agent tests run:
+  - `GOOGLE_GENAI_USE_VERTEXAI=true` (enables Vertex AI mode)
+  - `GOOGLE_CLOUD_PROJECT` (your GCP project ID)
+  - `GOOGLE_CLOUD_LOCATION` (e.g., `us-central1`)
+  - `GOOGLE_APPLICATION_CREDENTIALS` (path to service account JSON)
+
+  These are prerequisites for the scripts and integration tests in `scripts/test-agent_inmobiliarias.sh`.
+
+* **Testing:** New or updated agent logic must be covered by:
+  1. Shell-based regression suite (`scripts/test-agent_inmobiliarias.sh`)
+  2. Unit tests under `src/test/java` (with Mockito for service mocking)
+  3. Integration tests using `@SpringBootTest` and MockMvc
+
+  Keep session-dependent flows deterministic by resetting the H2 database with the provided `TestDataController` endpoint when needed.
+
+* **Security:**
+  - Agent endpoints must follow the same authentication/authorization patterns as REST endpoints
+  - Never commit `credentials.json` to version control (already in `.gitignore`)
+  - Use Workload Identity or Cloud Run service accounts in production, not file-based credentials
 
