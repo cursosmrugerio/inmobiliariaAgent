@@ -8,6 +8,10 @@ mvnw.cmd
 *.log
 *.tmp
 .playwright-mcp/
+/data/
+*.mv.db
+*.trace.db
+data/testdb.mv.db
 
 # Google Cloud credentials - NEVER commit
 credentials.json
