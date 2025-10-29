@@ -1,22 +1,8 @@
-import { useState } from 'react';
-import './App.css';
+import React from 'react';
+import { ChatContainer } from '@components/Chat/ChatContainer';
 
-function App() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <div className="app">
-      <header className="app__header">
-        <h1>Sistema de Gestión Inmobiliaria</h1>
-        <p>Frontend setup listo. Construye la experiencia conversacional aquí.</p>
-      </header>
-      <main className="app__content">
-        <button type="button" onClick={() => setCount((value) => value + 1)}>
-          Clicks: {count}
-        </button>
-      </main>
-    </div>
-  );
-}
+const App: React.FC = () => {
+  return <ChatContainer />;
+};
 
 export default App;
