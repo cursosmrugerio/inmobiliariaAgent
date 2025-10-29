@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
+import { storage } from '@utils/storage';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
@@ -12,7 +13,7 @@ export const api: AxiosInstance = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('auth_token');
+    const token = storage.get<string>('auth_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -25,8 +26,8 @@ api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('user');
+      storage.remove('auth_token');
+      storage.remove('user');
       window.location.href = '/login';
     }
     return Promise.reject(error);

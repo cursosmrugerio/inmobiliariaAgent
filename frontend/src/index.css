@@ -26,3 +26,14 @@ body {
 #root {
   min-height: 100vh;
 }
+
+@keyframes typing {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+}

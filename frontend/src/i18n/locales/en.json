@@ -38,5 +38,13 @@
     "select": "Language",
     "spanish": "Spanish",
     "english": "English"
+  },
+  "errors": {
+    "unexpectedTitle": "Oops! Something went wrong",
+    "unexpectedDescription": "An unexpected error occurred. Please try reloading the application.",
+    "reload": "Reload application",
+    "networkError": "Connection error. Please try again.",
+    "unauthorized": "Unauthorized. Please log in.",
+    "serverError": "Server error. Please try later."
   }
 }

@@ -1,14 +1,35 @@
-import React, { useMemo } from 'react';
+import React, { Suspense, lazy, useMemo } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { Box, CircularProgress, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { enUS, esES } from '@mui/material/locale';
 import { useTranslation } from 'react-i18next';
 
-import { ChatContainer } from '@components/Chat/ChatContainer';
 import { AuthProvider } from '@contexts/AuthContext';
-import { LoginForm } from '@components/Auth/LoginForm';
 import { PrivateRoute } from '@components/Auth/PrivateRoute';
 import { Header } from '@components/Layout/Header';
+
+const ChatContainer = lazy(async () => {
+  const module = await import('@components/Chat/ChatContainer');
+  return { default: module.ChatContainer };
+});
+
+const LoginForm = lazy(async () => {
+  const module = await import('@components/Auth/LoginForm');
+  return { default: module.LoginForm };
+});
+
+const LoadingFallback: React.FC = () => (
+  <Box
+    sx={{
+      minHeight: { xs: 'calc(100vh - 56px)', sm: 'calc(100vh - 64px)' },
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}
+  >
+    <CircularProgress />
+  </Box>
+);
 
 const App: React.FC = () => {
   const { i18n } = useTranslation();
@@ -37,18 +58,20 @@ const App: React.FC = () => {
         <CssBaseline />
         <BrowserRouter>
           <Header />
-          <Routes>
-            <Route path="/login" element={<LoginForm />} />
-            <Route
-              path="/chat"
-              element={
-                <PrivateRoute>
-                  <ChatContainer />
-                </PrivateRoute>
-              }
-            />
-            <Route path="/" element={<Navigate to="/chat" replace />} />
-          </Routes>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/login" element={<LoginForm />} />
+              <Route
+                path="/chat"
+                element={
+                  <PrivateRoute>
+                    <ChatContainer />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="/" element={<Navigate to="/chat" replace />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </ThemeProvider>
     </AuthProvider>

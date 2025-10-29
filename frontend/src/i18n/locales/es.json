@@ -38,5 +38,13 @@
     "select": "Idioma",
     "spanish": "Español",
     "english": "Inglés"
+  },
+  "errors": {
+    "unexpectedTitle": "¡Ups! Algo salió mal",
+    "unexpectedDescription": "Ocurrió un error inesperado. Intenta recargar la aplicación.",
+    "reload": "Recargar aplicación",
+    "networkError": "Error de conexión. Intenta nuevamente.",
+    "unauthorized": "No autorizado. Inicia sesión.",
+    "serverError": "Error del servidor. Intenta más tarde."
   }
 }

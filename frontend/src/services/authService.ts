@@ -1,28 +1,28 @@
-import api from './api';
 import { LoginRequest, LoginResponse, User } from '@/types/auth.types';
+import { storage } from '@utils/storage';
+import api from './api';
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
     const response = await api.post<LoginResponse>('/auth/login', credentials);
 
-    localStorage.setItem('auth_token', response.data.token);
-    localStorage.setItem('user', JSON.stringify(response.data.user));
+    storage.set('auth_token', response.data.token);
+    storage.set('user', response.data.user);
 
     return response.data;
   },
 
   logout: (): void => {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user');
+    storage.remove('auth_token');
+    storage.remove('user');
   },
 
   getCurrentUser: (): User | null => {
-    const userStr = localStorage.getItem('user');
-    return userStr ? (JSON.parse(userStr) as User) : null;
+    return storage.get<User>('user');
   },
 
   getToken: (): string | null => {
-    return localStorage.getItem('auth_token');
+    return storage.get<string>('auth_token');
   },
 
   isAuthenticated: (): boolean => {
