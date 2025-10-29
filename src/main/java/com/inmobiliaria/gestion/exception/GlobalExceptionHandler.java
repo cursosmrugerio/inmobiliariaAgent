@@ -12,4 +12,19 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ApiError> handleResourceNotFound(ResourceNotFoundException ex) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError(ex.getMessage()));
   }
+
+  @ExceptionHandler(InvalidCredentialsException.class)
+  public ResponseEntity<ApiError> handleInvalidCredentials(InvalidCredentialsException ex) {
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiError(ex.getMessage()));
+  }
+
+  @ExceptionHandler(EmailAlreadyUsedException.class)
+  public ResponseEntity<ApiError> handleEmailAlreadyUsed(EmailAlreadyUsedException ex) {
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiError(ex.getMessage()));
+  }
+
+  @ExceptionHandler(JwtValidationException.class)
+  public ResponseEntity<ApiError> handleJwtValidation(JwtValidationException ex) {
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiError(ex.getMessage()));
+  }
 }
