@@ -5,24 +5,23 @@ import { MessageInput } from './MessageInput';
 import { TypingIndicator } from './TypingIndicator';
 import { useChat } from '@hooks/useChat';
 import { AgentType } from '@/types/chat.types';
-import { Box, Button, Chip, Container, Paper, Typography } from '@mui/material';
+import { Alert, Box, Chip, Container, Paper, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 export const ChatContainer: React.FC = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const {
     messages,
     sessionId,
     currentAgent,
     isLoading,
+    error,
     sendMessage,
     clearConversation,
     changeAgent,
   } = useChat(AgentType.INMOBILIARIA);
-  const { logout, user } = useAuth();
+  const { user } = useAuth();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -30,15 +29,15 @@ export const ChatContainer: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login', { replace: true });
-  };
-
   return (
     <Container
       maxWidth="md"
-      sx={{ height: '100vh', display: 'flex', flexDirection: 'column', py: 2 }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        py: 2,
+        minHeight: { xs: 'calc(100vh - 56px)', sm: 'calc(100vh - 64px)' },
+      }}
     >
       <Paper elevation={2} sx={{ p: 2, mb: 2 }}>
         <Box
@@ -77,18 +76,10 @@ export const ChatContainer: React.FC = () => {
           >
             {sessionId && (
               <Chip
-                label={`Session: ${sessionId.substring(0, 8)}...`}
+                label={`${t('chat.sessionLabel')}: ${sessionId.substring(0, 8)}...`}
                 size="small"
               />
             )}
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="small"
-              onClick={handleLogout}
-            >
-              {t('auth.logout')}
-            </Button>
           </Box>
         </Box>
         <AgentSelector
@@ -96,6 +87,11 @@ export const ChatContainer: React.FC = () => {
           onChangeAgent={changeAgent}
           onClearConversation={clearConversation}
         />
+        {error && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error}
+          </Alert>
+        )}
       </Paper>
 
       <Paper

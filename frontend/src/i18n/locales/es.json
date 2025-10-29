@@ -1,0 +1,42 @@
+{
+  "app": {
+    "title": "Sistema de Gestión Inmobiliaria"
+  },
+  "chat": {
+    "title": "Asistente Inmobiliario",
+    "placeholder": "Escribe tu mensaje aquí...",
+    "send": "Enviar",
+    "emptyState": "Inicia una conversación con el asistente",
+    "typing": "El asistente está escribiendo...",
+    "clearConversation": "Nueva conversación",
+    "sessionLabel": "Sesión"
+  },
+  "agents": {
+    "inmobiliaria": {
+      "name": "Gestión de agencias",
+      "description": "Administra las agencias inmobiliarias"
+    },
+    "propiedad": {
+      "name": "Gestión de propiedades",
+      "description": "Administra las propiedades disponibles"
+    },
+    "persona": {
+      "name": "Gestión de contactos",
+      "description": "Administra clientes y contactos"
+    }
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "loggingIn": "Iniciando sesión...",
+    "loginError": "No se pudo iniciar sesión. Verifica tus credenciales.",
+    "welcome": "Bienvenido"
+  },
+  "language": {
+    "select": "Idioma",
+    "spanish": "Español",
+    "english": "Inglés"
+  }
+}

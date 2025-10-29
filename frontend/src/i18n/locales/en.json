@@ -1,0 +1,42 @@
+{
+  "app": {
+    "title": "Real Estate Management System"
+  },
+  "chat": {
+    "title": "Real Estate Assistant",
+    "placeholder": "Type your message here...",
+    "send": "Send",
+    "emptyState": "Start a conversation with the assistant",
+    "typing": "Assistant is typing...",
+    "clearConversation": "New conversation",
+    "sessionLabel": "Session"
+  },
+  "agents": {
+    "inmobiliaria": {
+      "name": "Agency management",
+      "description": "Manage real estate agencies"
+    },
+    "propiedad": {
+      "name": "Property management",
+      "description": "Manage real estate properties"
+    },
+    "persona": {
+      "name": "Contact management",
+      "description": "Manage clients and contacts"
+    }
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "email": "Email address",
+    "password": "Password",
+    "loggingIn": "Logging in...",
+    "loginError": "Login failed. Please check your credentials.",
+    "welcome": "Welcome"
+  },
+  "language": {
+    "select": "Language",
+    "spanish": "Spanish",
+    "english": "English"
+  }
+}
