@@ -1,0 +1,9 @@
+node_modules
+dist
+*.local
+.DS_Store
+dist-ssr
+*.log
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
