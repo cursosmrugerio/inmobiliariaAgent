@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
@@ -284,11 +285,20 @@ class Phase1IntegrationTest {
     @DisplayName("Debe permitir acceso a recursos estáticos sin autenticación")
     void shouldAllowStaticResourceAccess() throws Exception {
       // Test index.html (would exist in production build)
-      mockMvc.perform(get("/index.html")).andExpect(status().isNotFound()); // Not found is OK
-      // (not 401)
+      mockMvc
+          .perform(get("/index.html"))
+          .andExpect(
+              result ->
+                  assertThat(result.getResponse().getStatus())
+                      .isIn(HttpStatus.OK.value(), HttpStatus.NOT_FOUND.value()));
 
       // Test assets directory
-      mockMvc.perform(get("/assets/test.js")).andExpect(status().isNotFound()); // Not 401
+      mockMvc
+          .perform(get("/assets/test.js"))
+          .andExpect(
+              result ->
+                  assertThat(result.getResponse().getStatus())
+                      .isIn(HttpStatus.OK.value(), HttpStatus.NOT_FOUND.value()));
     }
 
     @Test

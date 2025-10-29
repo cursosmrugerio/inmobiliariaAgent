@@ -5,11 +5,14 @@ import { MessageInput } from './MessageInput';
 import { TypingIndicator } from './TypingIndicator';
 import { useChat } from '@hooks/useChat';
 import { AgentType } from '@/types/chat.types';
-import { Box, Chip, Container, Paper, Typography } from '@mui/material';
+import { Box, Button, Chip, Container, Paper, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export const ChatContainer: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const {
     messages,
     sessionId,
@@ -19,12 +22,18 @@ export const ChatContainer: React.FC = () => {
     clearConversation,
     changeAgent,
   } = useChat(AgentType.INMOBILIARIA);
+  const { logout, user } = useAuth();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <Container
@@ -42,10 +51,45 @@ export const ChatContainer: React.FC = () => {
             mb: 1,
           }}
         >
-          <Typography variant="h5">{t('chat.title')}</Typography>
-          {sessionId && (
-            <Chip label={`Session: ${sessionId.substring(0, 8)}...`} size="small" />
-          )}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 0.5,
+            }}
+          >
+            <Typography variant="h5">{t('chat.title')}</Typography>
+            {user && (
+              <Typography variant="body2" color="text.secondary">
+                {user.name} · {user.email}
+              </Typography>
+            )}
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              alignSelf: { xs: 'stretch', sm: 'center' },
+              width: { xs: '100%', sm: 'auto' },
+              justifyContent: { xs: 'space-between', sm: 'flex-end' },
+            }}
+          >
+            {sessionId && (
+              <Chip
+                label={`Session: ${sessionId.substring(0, 8)}...`}
+                size="small"
+              />
+            )}
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="small"
+              onClick={handleLogout}
+            >
+              {t('auth.logout')}
+            </Button>
+          </Box>
         </Box>
         <AgentSelector
           currentAgent={currentAgent}
