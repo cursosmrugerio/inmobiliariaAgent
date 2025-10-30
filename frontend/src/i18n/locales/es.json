@@ -123,6 +123,7 @@
       "curp": "CURP",
       "email": "Correo Electrónico",
       "telefono": "Teléfono",
+      "fechaAlta": "Fecha de Alta",
       "activo": "Activo"
     },
     "tipos": {
@@ -130,6 +131,19 @@
       "ARRENDATARIO": "Arrendatario",
       "FIADOR": "Fiador",
       "OTRO": "Otro"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "validation": {
+      "tipoRequired": "El tipo de persona es requerido",
+      "nombreRequired": "El nombre es requerido",
+      "apellidosRequired": "Los apellidos son requeridos",
+      "rfcRequired": "El RFC es requerido",
+      "emailRequired": "El correo es requerido",
+      "emailInvalid": "Correo electrónico inválido",
+      "telefonoRequired": "El teléfono es requerido"
     }
   },
   "errors": {

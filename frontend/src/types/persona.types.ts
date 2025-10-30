@@ -8,11 +8,11 @@ export enum PersonaTipo {
 export interface Persona {
   id: number;
   tipoPersona: PersonaTipo;
-  nombre: string;
-  apellidos: string;
-  razonSocial: string;
+  nombre?: string;
+  apellidos?: string;
+  razonSocial?: string;
   rfc: string;
-  curp: string;
+  curp?: string;
   email: string;
   telefono: string;
   fechaAlta: string;
@@ -21,13 +21,15 @@ export interface Persona {
 
 export interface PersonaCreateRequest {
   tipoPersona: PersonaTipo;
-  nombre: string;
-  apellidos: string;
+  nombre?: string;
+  apellidos?: string;
   razonSocial?: string;
   rfc: string;
   curp?: string;
   email: string;
   telefono: string;
+  fechaAlta: string;
+  activo: boolean;
 }
 
 export interface PersonaUpdateRequest extends PersonaCreateRequest {

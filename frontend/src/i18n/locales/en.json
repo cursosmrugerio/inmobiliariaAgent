@@ -123,6 +123,7 @@
       "curp": "CURP",
       "email": "Email",
       "telefono": "Phone",
+      "fechaAlta": "Created On",
       "activo": "Active"
     },
     "tipos": {
@@ -130,6 +131,19 @@
       "ARRENDATARIO": "Tenant",
       "FIADOR": "Guarantor",
       "OTRO": "Other"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "validation": {
+      "tipoRequired": "Person type is required",
+      "nombreRequired": "First name is required",
+      "apellidosRequired": "Last name is required",
+      "rfcRequired": "RFC is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "telefonoRequired": "Phone is required"
     }
   },
   "errors": {
