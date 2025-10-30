@@ -61,4 +61,45 @@ Problem Identified
 - Re-launched the frontend Vite dev server with nohup npm run dev -- --host 0.0.0.0 --port 5173, writing logs to /tmp/vite-
     dev.log; it now advertises http://localhost:5173/.
 
+To execute that command from your terminal, you have a few options depending on what you want to
+   achieve:
+
+  Option 1: Basic execution (blocks terminal)
+
+  npm run dev -- --host 0.0.0.0 --port 5173
+
+  Option 2: With nohup (runs in background, survives terminal close)
+
+  nohup npm run dev -- --host 0.0.0.0 --port 5173 > dev.log 2>&1 &
+
+  This will:
+  - Run the process in the background (&)
+  - Redirect output to dev.log instead of the terminal
+  - Continue running even if you close the terminal
+  - Store the process ID so you can kill it later with kill <PID>
+
+  Option 3: View output in real-time with nohup
+
+  nohup npm run dev -- --host 0.0.0.0 --port 5173 > dev.log 2>&1 & tail -f dev.log
+
+  This runs in background but lets you see the logs with tail -f.
+
+  To stop a nohup process later:
+
+  # Find the process
+  lsof -i :5173
+
+  # Or
+  ps aux | grep "npm run dev"
+
+  # Then kill it
+  kill <PID>
+
+  Note: Make sure you're in the frontend directory before running these commands. If you're
+  currently in /Users/mike/Desarrollo/compyser/inmobiliaria/backend, you'll need to navigate to
+  the frontend directory first:
+
+  cd ../frontend
+  nohup npm run dev -- --host 0.0.0.0 --port 5173 > dev.log 2>&1 &
+
 
