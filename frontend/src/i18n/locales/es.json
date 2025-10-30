@@ -2,6 +2,22 @@
   "app": {
     "title": "Sistema de Gestión Inmobiliaria"
   },
+  "common": {
+    "create": "Crear",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "search": "Buscar",
+    "actions": "Acciones",
+    "loading": "Cargando...",
+    "noData": "No hay datos disponibles",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar este registro?",
+    "deleteSuccess": "Registro eliminado exitosamente",
+    "deleteError": "Error al eliminar el registro",
+    "saveSuccess": "Registro guardado exitosamente",
+    "saveError": "Error al guardar el registro"
+  },
   "chat": {
     "title": "Asistente Inmobiliario",
     "placeholder": "Escribe tu mensaje aquí...",
@@ -38,6 +54,75 @@
     "select": "Idioma",
     "spanish": "Español",
     "english": "Inglés"
+  },
+  "nav": {
+    "dashboard": "Panel Principal",
+    "inmobiliarias": "Inmobiliarias",
+    "propiedades": "Propiedades",
+    "personas": "Personas",
+    "contratos": "Contratos",
+    "chat": "Chat con Agentes"
+  },
+  "inmobiliarias": {
+    "title": "Gestión de Inmobiliarias",
+    "create": "Nueva Inmobiliaria",
+    "edit": "Editar Inmobiliaria",
+    "fields": {
+      "nombre": "Nombre",
+      "rfc": "RFC",
+      "nombreContacto": "Nombre de Contacto",
+      "correo": "Correo Electrónico",
+      "telefono": "Teléfono"
+    },
+    "validation": {
+      "nombreRequired": "El nombre es requerido",
+      "rfcRequired": "El RFC es requerido",
+      "rfcInvalid": "RFC inválido",
+      "correoRequired": "El correo es requerido",
+      "correoInvalid": "Correo electrónico inválido"
+    }
+  },
+  "propiedades": {
+    "title": "Gestión de Propiedades",
+    "create": "Nueva Propiedad",
+    "edit": "Editar Propiedad",
+    "fields": {
+      "nombre": "Nombre",
+      "tipo": "Tipo",
+      "direccion": "Dirección",
+      "observaciones": "Observaciones",
+      "inmobiliaria": "Inmobiliaria"
+    },
+    "tipos": {
+      "CASA": "Casa",
+      "DEPARTAMENTO": "Departamento",
+      "LOCAL_COMERCIAL": "Local Comercial",
+      "OFICINA": "Oficina",
+      "BODEGA": "Bodega",
+      "TERRENO": "Terreno"
+    }
+  },
+  "personas": {
+    "title": "Gestión de Personas",
+    "create": "Nueva Persona",
+    "edit": "Editar Persona",
+    "fields": {
+      "tipoPersona": "Tipo",
+      "nombre": "Nombre",
+      "apellidos": "Apellidos",
+      "razonSocial": "Razón Social",
+      "rfc": "RFC",
+      "curp": "CURP",
+      "email": "Correo Electrónico",
+      "telefono": "Teléfono",
+      "activo": "Activo"
+    },
+    "tipos": {
+      "ARRENDADOR": "Arrendador",
+      "ARRENDATARIO": "Arrendatario",
+      "FIADOR": "Fiador",
+      "OTRO": "Otro"
+    }
   },
   "errors": {
     "unexpectedTitle": "¡Ups! Algo salió mal",
