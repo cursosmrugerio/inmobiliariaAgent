@@ -42,10 +42,13 @@ public class PersonaTool {
   public Map<String, Object> listAllPersonas() {
     try {
       List<PersonaResponse> personas = personaService.findAll();
+      // Convert to serializable format (LocalDateTime -> String) for ADK compatibility
+      List<Map<String, Object>> personasData =
+          personas.stream().map(this::convertPersonaToMap).toList();
       Map<String, Object> result = new HashMap<>();
       result.put("success", true);
-      result.put("count", personas.size());
-      result.put("personas", personas);
+      result.put("count", personasData.size());
+      result.put("personas", personasData);
       return result;
     } catch (Exception e) {
       log.error("Error listing personas", e);
@@ -66,7 +69,7 @@ public class PersonaTool {
       PersonaResponse persona = personaService.findById(id.longValue());
       Map<String, Object> result = new HashMap<>();
       result.put("success", true);
-      result.put("persona", persona);
+      result.put("persona", convertPersonaToMap(persona));
       return result;
     } catch (Exception e) {
       log.error("Error retrieving persona {}", id, e);
@@ -91,23 +94,48 @@ public class PersonaTool {
    */
   @Schema(
       description =
-          "Registrar una nueva persona física o moral. Utilice este método cuando se requiera dar"
-              + " de alta un nuevo cliente o contacto.")
+          "Registrar una nueva persona física o moral. Para persona FISICA se requieren: nombre,"
+              + " apellidos, y CURP (razonSocial no se usa). Para persona MORAL se requiere:"
+              + " razonSocial (nombre y apellidos no se usan). RFC, email y telefono son opcionales"
+              + " para ambos tipos.")
   public Map<String, Object> createPersona(
       @Schema(description = "Tipo de persona (FISICA o MORAL)", example = "FISICA", required = true)
           String tipoPersona,
-      @Schema(description = "Nombre(s) de la persona física", example = "María Fernanda")
+      @Schema(
+              description = "Nombre(s) de la persona física (requerido solo para FISICA)",
+              example = "María Fernanda",
+              required = false)
           String nombre,
-      @Schema(description = "Apellidos de la persona física", example = "Gómez Ramírez")
+      @Schema(
+              description = "Apellidos de la persona física (requerido solo para FISICA)",
+              example = "Gómez Ramírez",
+              required = false)
           String apellidos,
-      @Schema(description = "Razón social de la persona moral", example = "Servicios Delta S.A.")
+      @Schema(
+              description = "Razón social de la persona moral (requerido solo para MORAL)",
+              example = "Servicios Delta S.A.",
+              required = false)
           String razonSocial,
-      @Schema(description = "RFC con homoclave", example = "GORA8501011H0") String rfc,
-      @Schema(description = "CURP de la persona física", example = "GORM850101HDFRNL01")
+      @Schema(
+              description = "RFC con homoclave (opcional)",
+              example = "GORA8501011H0",
+              required = false)
+          String rfc,
+      @Schema(
+              description = "CURP de la persona física (requerido solo para FISICA)",
+              example = "GORM850101HDFRNL01",
+              required = false)
           String curp,
-      @Schema(description = "Correo electrónico de contacto", example = "contacto@delta.com")
+      @Schema(
+              description = "Correo electrónico de contacto (opcional)",
+              example = "contacto@delta.com",
+              required = false)
           String email,
-      @Schema(description = "Teléfono de contacto", example = "+52-55-5555-5555") String telefono,
+      @Schema(
+              description = "Teléfono de contacto (opcional)",
+              example = "+52-55-5555-5555",
+              required = false)
+          String telefono,
       @Schema(
               description = "Fecha de alta en formato ISO (yyyy-MM-ddTHH:mm:ss)",
               example = "2024-02-10T09:30:00",
@@ -137,7 +165,7 @@ public class PersonaTool {
       Map<String, Object> result = new HashMap<>();
       result.put("success", true);
       result.put("message", "Persona created successfully");
-      result.put("persona", created);
+      result.put("persona", convertPersonaToMap(created));
       return result;
     } catch (Exception e) {
       log.error("Error creating persona", e);
@@ -168,18 +196,31 @@ public class PersonaTool {
   public Map<String, Object> updatePersona(
       @Schema(description = "Identificador de la persona", example = "12", required = true)
           Integer id,
-      @Schema(description = "Nuevo tipo de persona", example = "MORAL") String tipoPersona,
-      @Schema(description = "Nombre(s) actualizado(s)", example = "Servicios") String nombre,
-      @Schema(description = "Apellidos actualizados", example = "Actualizados") String apellidos,
-      @Schema(description = "Nueva razón social", example = "Servicios Renovados S.A.")
+      @Schema(description = "Nuevo tipo de persona", example = "MORAL", required = false)
+          String tipoPersona,
+      @Schema(description = "Nombre(s) actualizado(s)", example = "Servicios", required = false)
+          String nombre,
+      @Schema(description = "Apellidos actualizados", example = "Actualizados", required = false)
+          String apellidos,
+      @Schema(
+              description = "Nueva razón social",
+              example = "Servicios Renovados S.A.",
+              required = false)
           String razonSocial,
-      @Schema(description = "Nuevo RFC", example = "REN123456789") String rfc,
-      @Schema(description = "Nueva CURP", example = "RENX850101HDFABC01") String curp,
-      @Schema(description = "Nuevo correo", example = "nuevo@servicios.com") String email,
-      @Schema(description = "Nuevo teléfono", example = "+52-55-6666-7777") String telefono,
-      @Schema(description = "Nueva fecha de alta en formato ISO", example = "2024-03-01T10:00:00")
+      @Schema(description = "Nuevo RFC", example = "REN123456789", required = false) String rfc,
+      @Schema(description = "Nueva CURP", example = "RENX850101HDFABC01", required = false)
+          String curp,
+      @Schema(description = "Nuevo correo", example = "nuevo@servicios.com", required = false)
+          String email,
+      @Schema(description = "Nuevo teléfono", example = "+52-55-6666-7777", required = false)
+          String telefono,
+      @Schema(
+              description = "Nueva fecha de alta en formato ISO",
+              example = "2024-03-01T10:00:00",
+              required = false)
           String fechaAlta,
-      @Schema(description = "Nuevo estatus activo/inactivo", example = "false") Boolean activo) {
+      @Schema(description = "Nuevo estatus activo/inactivo", example = "false", required = false)
+          Boolean activo) {
     try {
       PersonaTipo personaTipo = tipoPersona != null ? parseTipo(tipoPersona, false) : null;
       LocalDateTime alta = fechaAlta != null ? parseFecha(fechaAlta, false) : null;
@@ -199,7 +240,7 @@ public class PersonaTool {
       Map<String, Object> result = new HashMap<>();
       result.put("success", true);
       result.put("message", "Persona updated successfully");
-      result.put("persona", updated);
+      result.put("persona", convertPersonaToMap(updated));
       return result;
     } catch (Exception e) {
       log.error("Error updating persona {}", id, e);
@@ -264,5 +305,31 @@ public class PersonaTool {
     error.put("success", false);
     error.put("error", message);
     return error;
+  }
+
+  /**
+   * Converts PersonaResponse to a Map with LocalDateTime serialized as String. This is required for
+   * ADK FunctionTool compatibility, as the ADK library's internal ObjectMapper does not have the
+   * JSR-310 module registered.
+   *
+   * @param persona The PersonaResponse to convert
+   * @return Map with all fields, LocalDateTime converted to ISO-8601 String
+   */
+  private Map<String, Object> convertPersonaToMap(PersonaResponse persona) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", persona.getId());
+    map.put("tipoPersona", persona.getTipoPersona().name());
+    map.put("nombre", persona.getNombre());
+    map.put("apellidos", persona.getApellidos());
+    map.put("razonSocial", persona.getRazonSocial());
+    map.put("rfc", persona.getRfc());
+    map.put("curp", persona.getCurp());
+    map.put("email", persona.getEmail());
+    map.put("telefono", persona.getTelefono());
+    map.put(
+        "fechaAlta",
+        persona.getFechaAlta() != null ? persona.getFechaAlta().format(ISO_FORMATTER) : null);
+    map.put("activo", persona.isActivo());
+    return map;
   }
 }
