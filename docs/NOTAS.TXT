@@ -7,4 +7,47 @@ In the H2 console login form, update the JDBC URL to:
  jdbc:h2:file:./data/testdb;AUTO_SERVER=TRUE
 Keep the username as SA and leave the password blank
 
+------------
+
+Clear Browser Cache (Quick Methods)
+
+  Option 1: Hard Refresh (Fastest)
+
+  Press these keyboard shortcuts based on your OS:
+
+  On Mac:
+  ⌘ + Shift + R
+  or
+  ⌘ + Option + R
+
+  On Windows/Linux:
+  Ctrl + Shift + R
+  or
+  Ctrl + F5
+
+  ---
+  Option 2: Clear Cache via DevTools
+
+  1. Open DevTools: Press F12 or Right-click → Inspect
+  2. Right-click the refresh button (next to the address bar)
+  3. Select: "Empty Cache and Hard Reload"
+
+  ---
+  Option 3: Clear All Site Data
+
+  1. Press F12 to open DevTools
+  2. Go to Application tab (Chrome) or Storage tab (Firefox)
+  3. Click "Clear site data" or "Clear storage"
+  4. Refresh the page
+
+  ---
+  Option 4: Rebuild Frontend (If above doesn't work)
+
+  If the cache is really stubborn, rebuild the frontend:
+
+  cd frontend
+  npm run build
+
+  Then do a hard refresh in your browser.
+
 

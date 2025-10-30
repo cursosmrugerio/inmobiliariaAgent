@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/personas")
+@RequestMapping("/api/personas")
 @Tag(name = "Personas", description = "Gestión del catálogo de personas")
 public class PersonaController {
 
@@ -91,7 +91,7 @@ public class PersonaController {
   @PostMapping
   public ResponseEntity<PersonaResponse> create(@Valid @RequestBody CreatePersonaRequest request) {
     PersonaResponse response = personaService.create(request);
-    return ResponseEntity.created(URI.create("/personas/" + response.getId())).body(response);
+    return ResponseEntity.created(URI.create("/api/personas/" + response.getId())).body(response);
   }
 
   @Operation(

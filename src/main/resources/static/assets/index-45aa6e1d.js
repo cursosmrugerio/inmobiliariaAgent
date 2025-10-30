@@ -1,1 +1,0 @@
-import{h as n,j as s,B as o,P as r,T as a}from"./index-62307a83.js";const x=()=>{const{t}=n();return s.jsx(o,{sx:{p:3},children:s.jsxs(r,{sx:{p:4,textAlign:"center"},children:[s.jsx(a,{variant:"h4",sx:{mb:2},children:t("nav.contratos")}),s.jsx(a,{variant:"body1",color:"text.secondary",children:t("common.noData")})]})})};export{x as ContratosPage};

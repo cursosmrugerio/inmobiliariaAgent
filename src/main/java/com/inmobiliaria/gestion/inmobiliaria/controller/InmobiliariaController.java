@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/inmobiliarias")
+@RequestMapping("/api/inmobiliarias")
 @Tag(name = "Inmobiliarias", description = "Gestión de inmobiliarias")
 public class InmobiliariaController {
 
@@ -85,7 +85,8 @@ public class InmobiliariaController {
   public ResponseEntity<InmobiliariaResponse> create(
       @Valid @RequestBody CreateInmobiliariaRequest request) {
     InmobiliariaResponse response = inmobiliariaService.create(request);
-    return ResponseEntity.created(URI.create("/inmobiliarias/" + response.getId())).body(response);
+    return ResponseEntity.created(URI.create("/api/inmobiliarias/" + response.getId()))
+        .body(response);
   }
 
   @Operation(

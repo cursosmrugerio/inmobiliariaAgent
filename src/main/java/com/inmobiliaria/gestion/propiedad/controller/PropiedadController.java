@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/propiedades")
+@RequestMapping("/api/propiedades")
 @Tag(name = "Propiedades", description = "Gestión del catálogo de propiedades")
 public class PropiedadController {
 
@@ -109,7 +109,8 @@ public class PropiedadController {
   public ResponseEntity<PropiedadResponse> create(
       @Valid @RequestBody CreatePropiedadRequest request) {
     PropiedadResponse response = propiedadService.create(request);
-    return ResponseEntity.created(URI.create("/propiedades/" + response.getId())).body(response);
+    return ResponseEntity.created(URI.create("/api/propiedades/" + response.getId()))
+        .body(response);
   }
 
   @Operation(

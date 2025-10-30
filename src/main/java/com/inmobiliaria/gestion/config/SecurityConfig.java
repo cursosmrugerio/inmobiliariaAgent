@@ -31,7 +31,20 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                     .permitAll()
-                    .requestMatchers("/", "/index.html", "/assets/**", "/favicon.ico")
+                    .requestMatchers(
+                        "/",
+                        "/index.html",
+                        "/assets/**",
+                        "/favicon.ico",
+                        "/login",
+                        "/chat",
+                        "/dashboard",
+                        "/inmobiliarias",
+                        "/inmobiliarias/**",
+                        "/propiedades",
+                        "/propiedades/**",
+                        "/personas",
+                        "/personas/**")
                     .permitAll()
                     .requestMatchers("/api/auth/**")
                     .permitAll()
