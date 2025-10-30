@@ -50,4 +50,15 @@ Clear Browser Cache (Quick Methods)
 
   Then do a hard refresh in your browser.
 
+------------------
+
+Problem Identified
+
+  You were right to question the initial test! The issue was that the Vite dev server 
+  needed to be restarted to pick up the file changes. The browser cache wasn't the issue
+  - it was the dev server not hot-reloading the changes.
+
+- Re-launched the frontend Vite dev server with nohup npm run dev -- --host 0.0.0.0 --port 5173, writing logs to /tmp/vite-
+    dev.log; it now advertises http://localhost:5173/.
+
 

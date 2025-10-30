@@ -98,10 +98,12 @@
     "tipos": {
       "CASA": "House",
       "DEPARTAMENTO": "Apartment",
-      "LOCAL_COMERCIAL": "Commercial Space",
       "OFICINA": "Office",
-      "BODEGA": "Warehouse",
-      "TERRENO": "Land"
+      "LOCAL": "Commercial Space",
+      "ESTACIONAMIENTO": "Parking",
+      "EDIFICIO": "Building",
+      "TERRENO": "Land",
+      "OTRO": "Other"
     },
     "validation": {
       "nombreRequired": "Name is required",

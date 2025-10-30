@@ -1,10 +1,12 @@
 export enum PropiedadTipo {
   CASA = 'CASA',
   DEPARTAMENTO = 'DEPARTAMENTO',
-  LOCAL_COMERCIAL = 'LOCAL_COMERCIAL',
   OFICINA = 'OFICINA',
-  BODEGA = 'BODEGA',
+  LOCAL = 'LOCAL',
+  ESTACIONAMIENTO = 'ESTACIONAMIENTO',
+  EDIFICIO = 'EDIFICIO',
   TERRENO = 'TERRENO',
+  OTRO = 'OTRO',
 }
 
 export interface Propiedad {

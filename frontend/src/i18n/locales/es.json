@@ -98,10 +98,12 @@
     "tipos": {
       "CASA": "Casa",
       "DEPARTAMENTO": "Departamento",
-      "LOCAL_COMERCIAL": "Local Comercial",
       "OFICINA": "Oficina",
-      "BODEGA": "Bodega",
-      "TERRENO": "Terreno"
+      "LOCAL": "Local Comercial",
+      "ESTACIONAMIENTO": "Estacionamiento",
+      "EDIFICIO": "Edificio",
+      "TERRENO": "Terreno",
+      "OTRO": "Otro"
     },
     "validation": {
       "nombreRequired": "El nombre es requerido",

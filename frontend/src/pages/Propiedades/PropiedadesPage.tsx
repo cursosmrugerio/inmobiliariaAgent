@@ -168,8 +168,8 @@ export const PropiedadesPage: React.FC = () => {
         field: 'tipo',
         headerName: t('propiedades.fields.tipo'),
         width: 160,
-        valueFormatter: ({ value }: { value: unknown }) =>
-          t(`propiedades.tipos.${value as string}`),
+        valueFormatter: (value: string) =>
+          t(`propiedades.tipos.${value}`),
       },
       {
         field: 'direccion',
