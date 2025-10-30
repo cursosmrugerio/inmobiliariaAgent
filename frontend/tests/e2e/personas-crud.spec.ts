@@ -1,12 +1,6 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-const ADMIN_EMAIL = process.env.PLAYWRIGHT_ADMIN_EMAIL ?? 'admin@test.com';
-const ADMIN_PASSWORD = process.env.PLAYWRIGHT_ADMIN_PASSWORD ?? 'admin123';
-
-const waitForSnackbar = async (page: Page, message: RegExp) => {
-  const snackbar = page.getByRole('alert').filter({ hasText: message });
-  await expect(snackbar).toBeVisible();
-};
+import { loginAsAdmin, waitForSnackbar } from './support/test-helpers';
 
 test.describe('Personas management', () => {
   test('performs Personas CRUD flow end-to-end', async ({ page }) => {
@@ -21,13 +15,7 @@ test.describe('Personas management', () => {
     };
     const personaFullName = `${persona.firstName} ${persona.lastName}`;
 
-    await page.goto('/login');
-    await expect(page.getByRole('heading', { name: /log in/i })).toBeVisible();
-
-    await page.getByLabel(/email address/i).fill(ADMIN_EMAIL);
-    await page.getByLabel(/password/i).fill(ADMIN_PASSWORD);
-    await page.getByRole('button', { name: /log in/i }).click();
-    await page.waitForURL('**/dashboard');
+    await loginAsAdmin(page);
 
     await page.goto('/personas');
     await expect(page.getByRole('heading', { name: /contact management/i })).toBeVisible();
