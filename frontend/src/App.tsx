@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useMemo } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { Box, CircularProgress, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { enUS, esES } from '@mui/material/locale';
 import { useTranslation } from 'react-i18next';
@@ -18,10 +18,35 @@ const LoginForm = lazy(async () => {
   return { default: module.LoginForm };
 });
 
+const DashboardPage = lazy(async () => {
+  const module = await import('@/pages/Dashboard');
+  return { default: module.DashboardPage };
+});
+
+const InmobiliariasPage = lazy(async () => {
+  const module = await import('@/pages/Inmobiliarias');
+  return { default: module.InmobiliariasPage };
+});
+
+const PropiedadesPage = lazy(async () => {
+  const module = await import('@/pages/Propiedades');
+  return { default: module.PropiedadesPage };
+});
+
+const PersonasPage = lazy(async () => {
+  const module = await import('@/pages/Personas');
+  return { default: module.PersonasPage };
+});
+
+const ContratosPage = lazy(async () => {
+  const module = await import('@/pages/Contratos');
+  return { default: module.ContratosPage };
+});
+
 const LoadingFallback: React.FC = () => (
   <Box
     sx={{
-      minHeight: { xs: 'calc(100vh - 56px)', sm: 'calc(100vh - 64px)' },
+      minHeight: '50vh',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -29,6 +54,17 @@ const LoadingFallback: React.FC = () => (
   >
     <CircularProgress />
   </Box>
+);
+
+const PrivateLayout: React.FC = () => (
+  <PrivateRoute>
+    <>
+      <Header />
+      <Box component="main">
+        <Outlet />
+      </Box>
+    </>
+  </PrivateRoute>
 );
 
 const App: React.FC = () => {
@@ -57,19 +93,19 @@ const App: React.FC = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <BrowserRouter>
-          <Header />
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
               <Route path="/login" element={<LoginForm />} />
-              <Route
-                path="/chat"
-                element={
-                  <PrivateRoute>
-                    <ChatContainer />
-                  </PrivateRoute>
-                }
-              />
-              <Route path="/" element={<Navigate to="/chat" replace />} />
+              <Route element={<PrivateLayout />}>
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/inmobiliarias" element={<InmobiliariasPage />} />
+                <Route path="/propiedades" element={<PropiedadesPage />} />
+                <Route path="/personas" element={<PersonasPage />} />
+                <Route path="/contratos" element={<ContratosPage />} />
+                <Route path="/chat" element={<ChatContainer />} />
+              </Route>
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </Suspense>
         </BrowserRouter>

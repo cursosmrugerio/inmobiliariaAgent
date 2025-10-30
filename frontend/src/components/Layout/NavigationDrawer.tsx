@@ -28,7 +28,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({ open, onClos
   const { t } = useTranslation();
 
   const menuItems = [
-    { path: '/', label: t('nav.dashboard'), icon: <DashboardIcon /> },
+    { path: '/dashboard', label: t('nav.dashboard'), icon: <DashboardIcon /> },
     { path: '/inmobiliarias', label: t('nav.inmobiliarias'), icon: <BusinessIcon /> },
     { path: '/propiedades', label: t('nav.propiedades'), icon: <HomeIcon /> },
     { path: '/personas', label: t('nav.personas'), icon: <PeopleIcon /> },
@@ -46,7 +46,10 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({ open, onClos
         {menuItems.map((item) => (
           <ListItem key={item.path} disablePadding>
             <ListItemButton
-              selected={location.pathname === item.path}
+              selected={
+                location.pathname === item.path ||
+                (item.path !== '/dashboard' && location.pathname.startsWith(`${item.path}/`))
+              }
               onClick={() => handleNavigate(item.path)}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
