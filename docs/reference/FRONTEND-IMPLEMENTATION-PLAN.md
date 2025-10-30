@@ -2495,4 +2495,4 @@ After completing this implementation:
 For questions or clarifications, refer to:
 - Backend architecture: `CLAUDE.md`
 - Agent implementation: `docs/README-AGENT.md`
-- Testing procedures: `docs/generatedXclaude/README-TESTING.md`
+- Testing procedures: `docs/reference/README-TESTING.md`

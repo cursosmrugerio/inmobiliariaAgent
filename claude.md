@@ -98,7 +98,7 @@ This file serves as a persistent system prompt and contextual guide for any AI a
 * **Documentation Alignment:** Before extending or creating CRUD agents, review:
   - `docs/README-AGENT.md` for architecture and usage patterns
   - `docs/vertex-ai.md` for Vertex AI configuration details
-  - `docs/generatedXclaude/README-TESTING.md` for testing workflow and best practices
+  - `docs/reference/README-TESTING.md` for testing workflow and best practices
 
 * **Environment Requirements:** Ensure the following environment variables are available whenever conversational agent tests run:
   - `GOOGLE_GENAI_USE_VERTEXAI=true` (enables Vertex AI mode)

@@ -236,9 +236,12 @@ backend/
 │   │           └── UpdateInmobiliariaRequest.java
 ├── FIXES-SUMMARY.md                   # Summary of all fixes
 ├── GOOGLE-CREDENTIALS-SETUP.md        # Credentials setup guide
-├── TEST-AGENT-README.md               # Test documentation
-├── TEST-FAILURES-EXPLAINED.md         # Historical test failures
-└── README-TESTING.md                  # This file
+├── AGENT-STATUS.md                    # Current status and summary
+├── README-TESTING.md                  # This file
+└── archive/                           # Archived documentation
+    ├── TEST-AGENT-INMO-README.md      # Legacy test docs
+    ├── TEST-FAILURES-EXPLAINED.md     # Historical failures
+    └── [other archived summaries]
 ```
 
 ## Key Features Implemented
@@ -281,10 +284,10 @@ Agent asks for confirmation before deleting and can handle confirmations properl
 
 ## Additional Documentation
 
+- **AGENT-STATUS.md** - Current system status and summary
 - **FIXES-SUMMARY.md** - Complete history of fixes and improvements
-- **TEST-FAILURES-EXPLAINED.md** - Historical test failures and solutions
-- **TEST-AGENT-README.md** - Original test documentation
 - **GOOGLE-CREDENTIALS-SETUP.md** - Detailed credentials setup guide
+- **../archive/** - Archived/historical documentation
 
 ## Support
 

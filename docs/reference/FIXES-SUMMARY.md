@@ -137,11 +137,10 @@ This ensures the agent has all necessary information to complete the deletion, r
 1. `/src/main/java/com/inmobiliaria/gestion/inmobiliaria/controller/TestDataController.java`
 2. `/scripts/test-agent_inmobiliarias.sh` (updated)
 3. `/scripts/clean-database.sh`
-4. `/TEST-AGENT-README.md`
-5. `/TEST-FAILURES-EXPLAINED.md`
-6. `/FIXES-SUMMARY.md` (this file)
-7. `/GOOGLE-CREDENTIALS-SETUP.md` (credentials setup guide)
-8. `/README-TESTING.md` (comprehensive testing guide)
+4. `/FIXES-SUMMARY.md` (this file)
+5. `/AGENT-STATUS.md` (consolidated status document)
+6. `/GOOGLE-CREDENTIALS-SETUP.md` (credentials setup guide)
+7. `/README-TESTING.md` (comprehensive testing guide)
 
 ### Modified Files:
 1. `/src/main/java/com/inmobiliaria/gestion/inmobiliaria/dto/UpdateInmobiliariaRequest.java`

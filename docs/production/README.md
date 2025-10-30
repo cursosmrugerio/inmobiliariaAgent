@@ -67,7 +67,7 @@ Before deploying, ensure you have:
 
 - Project Architecture: `../README-AGENT.md`
 - Vertex AI Setup: `../VERTEX-AI.md`
-- Testing Guide: `../generatedXclaude/README-TESTING.md`
+- Testing Guide: `../reference/README-TESTING.md`
 
 ## ⚠️ Important Notes
 

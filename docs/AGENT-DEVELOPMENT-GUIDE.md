@@ -29,7 +29,7 @@ This guide will teach you how to create conversational AI agents for CRUD operat
 ./scripts/generate-crud-agent.sh
 ```
 
-See **[GENERATOR-QUICK-START.md](GENERATOR-QUICK-START.md)** for instant setup, or continue reading for detailed manual implementation.
+See **[GENERATOR-QUICK-START.md](reference/GENERATOR-QUICK-START.md)** for instant setup, or continue reading for detailed manual implementation.
 
 ### What You'll Build
 

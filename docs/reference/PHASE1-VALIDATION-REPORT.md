@@ -1,7 +1,7 @@
 # Phase 1: Backend Integration & Authentication - Validation Report
 
 **Date**: 2025-10-29
-**Document Reference**: `docs/FRONTEND-IMPLEMENTATION-PLAN.md` - Phase 1
+**Document Reference**: `docs/reference/FRONTEND-IMPLEMENTATION-PLAN.md` - Phase 1
 **Status**: ✅ **VALIDATED & COMPLETE**
 
 ---
@@ -442,7 +442,7 @@ ls target/surefire-reports/
 
 ## References
 
-- **Implementation Plan**: `docs/FRONTEND-IMPLEMENTATION-PLAN.md`
+- **Implementation Plan**: `docs/reference/FRONTEND-IMPLEMENTATION-PLAN.md`
 - **Security Configuration**: `src/main/java/com/inmobiliaria/gestion/config/SecurityConfig.java`
 - **JWT Utilities**: `src/main/java/com/inmobiliaria/gestion/auth/security/JwtUtil.java`
 - **Auth Controller**: `src/main/java/com/inmobiliaria/gestion/auth/controller/AuthController.java`
