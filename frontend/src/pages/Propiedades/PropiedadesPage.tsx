@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import { DeleteConfirmDialog, LoadingSpinner, SnackbarNotification } from '@components/Common';
 import { inmobiliariaService, propiedadService } from '@services';
 import type { Inmobiliaria, Propiedad } from '@/types';
+import { useDebounce } from '@hooks/useDebounce';
 import { PropiedadFormDialog } from './PropiedadFormDialog';
 
 type SnackbarState = {
@@ -56,6 +57,7 @@ export const PropiedadesPage: React.FC = () => {
     message: '',
     severity: 'success',
   });
+  const debouncedSearchText = useDebounce(searchText, 300);
 
   const loadInmobiliarias = useCallback(async () => {
     try {
@@ -158,7 +160,7 @@ export const PropiedadesPage: React.FC = () => {
     setSelectedFilter(value === 'all' ? 'all' : Number(value));
   }, []);
 
-  const columns: GridColDef<Propiedad>[] = useMemo(
+  const columns: GridColDef[] = useMemo(
     () => [
       { field: 'id', headerName: 'ID', width: 80 },
       { field: 'nombre', headerName: t('propiedades.fields.nombre'), flex: 1, minWidth: 200 },
@@ -166,7 +168,8 @@ export const PropiedadesPage: React.FC = () => {
         field: 'tipo',
         headerName: t('propiedades.fields.tipo'),
         width: 160,
-        valueFormatter: (params) => t(`propiedades.tipos.${params.value as string}`),
+        valueFormatter: ({ value }: { value: unknown }) =>
+          t(`propiedades.tipos.${value as string}`),
       },
       {
         field: 'direccion',
@@ -179,8 +182,8 @@ export const PropiedadesPage: React.FC = () => {
         headerName: t('propiedades.fields.observaciones'),
         flex: 1,
         minWidth: 240,
-        renderCell: (params: GridRenderCellParams<Propiedad, string | null>) => {
-          const value = params.value ?? '';
+        renderCell: (params: GridRenderCellParams<any, string | null>) => {
+          const value = (params.value as string) ?? '';
           const displayValue = value.length > 40 ? `${value.slice(0, 37)}…` : value;
           return (
             <Tooltip title={value}>
@@ -199,19 +202,19 @@ export const PropiedadesPage: React.FC = () => {
         type: 'actions',
         headerName: t('common.actions'),
         width: 120,
-        getActions: (params: GridRowParams<Propiedad>) => [
+        getActions: (params: GridRowParams) => [
           <GridActionsCellItem
             key="edit"
             icon={<EditIcon />}
             label={t('common.edit')}
-            onClick={() => handleEdit(params.row)}
+            onClick={() => handleEdit(params.row as Propiedad)}
             showInMenu={false}
           />,
           <GridActionsCellItem
             key="delete"
             icon={<DeleteIcon />}
             label={t('common.delete')}
-            onClick={() => handleDeleteClick(params.row.id)}
+            onClick={() => handleDeleteClick((params.row as Propiedad).id)}
             showInMenu={false}
           />,
         ],
@@ -226,10 +229,10 @@ export const PropiedadesPage: React.FC = () => {
         Object.values(item).some((value) =>
           String(value ?? '')
             .toLowerCase()
-            .includes(searchText.trim().toLowerCase()),
+            .includes(debouncedSearchText.trim().toLowerCase()),
         ),
       ),
-    [propiedades, searchText],
+    [propiedades, debouncedSearchText],
   );
 
   if (loading) {

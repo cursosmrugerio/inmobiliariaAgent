@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { DeleteConfirmDialog, LoadingSpinner, SnackbarNotification } from '@components/Common';
 import { inmobiliariaService } from '@services';
 import type { Inmobiliaria } from '@/types';
+import { useDebounce } from '@hooks/useDebounce';
 import { InmobiliariaFormDialog } from './InmobiliariaFormDialog';
 import type { AlertColor } from '@mui/material';
 
@@ -38,6 +39,7 @@ export const InmobiliariasPage: React.FC = () => {
     message: '',
     severity: 'success',
   });
+  const debouncedSearchText = useDebounce(searchText, 300);
 
   const loadInmobiliarias = useCallback(async () => {
     try {
@@ -155,10 +157,10 @@ export const InmobiliariasPage: React.FC = () => {
         Object.values(item).some((value) =>
           String(value ?? '')
             .toLowerCase()
-            .includes(searchText.trim().toLowerCase()),
+            .includes(debouncedSearchText.trim().toLowerCase()),
         ),
       ),
-    [inmobiliarias, searchText],
+    [inmobiliarias, debouncedSearchText],
   );
 
   if (loading) {

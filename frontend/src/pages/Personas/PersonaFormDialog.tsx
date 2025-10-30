@@ -11,17 +11,13 @@ import {
   Switch,
   TextField,
 } from '@mui/material';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm, useWatch, type Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 
 import { personaService } from '@services';
-import type {
-  Persona,
-  PersonaCreateRequest,
-  PersonaUpdateRequest,
-} from '@/types';
+import type { Persona, PersonaCreateRequest, PersonaUpdateRequest } from '@/types';
 import { PersonaTipo } from '@/types';
 
 interface PersonaFormDialogProps {
@@ -31,36 +27,48 @@ interface PersonaFormDialogProps {
   onSuccess: () => void;
 }
 
-type PersonaFormValues = PersonaCreateRequest;
+type PersonaFormValues = {
+  tipoPersona: PersonaTipo;
+  nombre: string;
+  apellidos: string;
+  razonSocial: string;
+  rfc: string;
+  curp: string;
+  email: string;
+  telefono: string;
+  fechaAlta: string;
+  activo: boolean;
+};
 
 const buildValidationSchema = (t: ReturnType<typeof useTranslation>['t']) =>
   yup.object({
     tipoPersona: yup
       .mixed<PersonaTipo>()
-      .oneOf(Object.values(PersonaTipo), t('personas.validation.tipoRequired')),
+      .oneOf(Object.values(PersonaTipo), t('personas.validation.tipoRequired'))
+      .required(t('personas.validation.tipoRequired')),
     nombre: yup
       .string()
-      .nullable()
       .when('tipoPersona', {
         is: (value: PersonaTipo) =>
           value === PersonaTipo.ARRENDADOR ||
           value === PersonaTipo.ARRENDATARIO ||
           value === PersonaTipo.FIADOR,
         then: (schema) => schema.required(t('personas.validation.nombreRequired')),
+        otherwise: (schema) => schema.optional(),
       }),
     apellidos: yup
       .string()
-      .nullable()
       .when('tipoPersona', {
         is: (value: PersonaTipo) =>
           value === PersonaTipo.ARRENDADOR ||
           value === PersonaTipo.ARRENDATARIO ||
           value === PersonaTipo.FIADOR,
         then: (schema) => schema.required(t('personas.validation.apellidosRequired')),
+        otherwise: (schema) => schema.optional(),
       }),
-    razonSocial: yup.string().nullable(),
+    razonSocial: yup.string().optional(),
     rfc: yup.string().required(t('personas.validation.rfcRequired')),
-    curp: yup.string().nullable(),
+    curp: yup.string().optional(),
     email: yup.string().email(t('personas.validation.emailInvalid')).required(t('personas.validation.emailRequired')),
     telefono: yup.string().required(t('personas.validation.telefonoRequired')),
     fechaAlta: yup.string().required(),
@@ -86,7 +94,7 @@ export const PersonaFormDialog: React.FC<PersonaFormDialogProps> = ({
     reset,
     formState: { errors, isSubmitting },
   } = useForm<PersonaFormValues>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as Resolver<PersonaFormValues>,
     defaultValues: {
       tipoPersona: PersonaTipo.ARRENDADOR,
       nombre: '',
@@ -137,13 +145,18 @@ export const PersonaFormDialog: React.FC<PersonaFormDialogProps> = ({
   }, [persona, reset]);
 
   const onSubmit = async (formValues: PersonaFormValues) => {
+    const isCompany = shouldShowCompanyFields(formValues.tipoPersona);
     const payload: PersonaCreateRequest | PersonaUpdateRequest = {
-      ...formValues,
-      razonSocial: shouldShowCompanyFields(formValues.tipoPersona)
-        ? formValues.razonSocial ?? ''
-        : '',
-      curp: formValues.curp ?? '',
+      tipoPersona: formValues.tipoPersona,
+      nombre: isCompany ? undefined : formValues.nombre.trim() || undefined,
+      apellidos: isCompany ? undefined : formValues.apellidos.trim() || undefined,
+      razonSocial: isCompany ? formValues.razonSocial.trim() || undefined : undefined,
+      rfc: formValues.rfc.trim(),
+      curp: formValues.curp.trim() || undefined,
+      email: formValues.email.trim(),
+      telefono: formValues.telefono.trim(),
       fechaAlta: formValues.fechaAlta,
+      activo: formValues.activo,
     };
 
     try {

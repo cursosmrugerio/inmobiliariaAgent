@@ -83,11 +83,18 @@ export const InmobiliariaFormDialog: React.FC<InmobiliariaFormDialogProps> = ({
   }, [inmobiliaria, reset]);
 
   const onSubmit = async (data: InmobiliariaCreateRequest) => {
+    const payload: InmobiliariaCreateRequest = {
+      nombre: data.nombre.trim(),
+      rfc: data.rfc.trim(),
+      nombreContacto: data.nombreContacto.trim(),
+      correo: data.correo.trim(),
+      telefono: data.telefono.trim(),
+    };
     try {
       if (isEdit && inmobiliaria) {
-        await inmobiliariaService.update(inmobiliaria.id, data);
+        await inmobiliariaService.update(inmobiliaria.id, { ...payload, id: inmobiliaria.id });
       } else {
-        await inmobiliariaService.create(data);
+        await inmobiliariaService.create(payload);
       }
       onSuccess();
     } catch (error) {

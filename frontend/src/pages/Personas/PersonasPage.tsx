@@ -5,13 +5,20 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
-import { DataGrid, GridActionsCellItem, GridColDef, GridRowParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridRenderCellParams,
+  GridRowParams,
+} from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
 
 import { DeleteConfirmDialog, LoadingSpinner, SnackbarNotification } from '@components/Common';
 import { personaService } from '@services';
 import type { Persona } from '@/types';
 import { PersonaTipo } from '@/types';
+import { useDebounce } from '@hooks/useDebounce';
 import { PersonaFormDialog } from './PersonaFormDialog';
 
 type SnackbarState = {
@@ -61,6 +68,7 @@ export const PersonasPage: React.FC = () => {
     message: '',
     severity: 'success',
   });
+  const debouncedSearchText = useDebounce(searchText, 300);
 
   const loadPersonas = useCallback(async () => {
     try {
@@ -134,21 +142,22 @@ export const PersonasPage: React.FC = () => {
     });
   }, [loadPersonas, t]);
 
-  const columns: GridColDef<Persona>[] = useMemo(
+  const columns: GridColDef[] = useMemo(
     () => [
       { field: 'id', headerName: 'ID', width: 80 },
       {
         field: 'tipoPersona',
         headerName: t('personas.fields.tipoPersona'),
         width: 160,
-        valueFormatter: (params) => t(`personas.tipos.${params.value as PersonaTipo}`),
+        valueFormatter: ({ value }: { value: unknown }) =>
+          t(`personas.tipos.${value as PersonaTipo}`),
       },
       {
         field: 'nombreCompleto',
         headerName: t('personas.fields.nombre'),
         flex: 1,
         minWidth: 220,
-        valueGetter: (params) => formatDisplayName(params.row),
+        valueGetter: (params: any) => formatDisplayName(params.row as Persona),
       },
       {
         field: 'rfc',
@@ -169,13 +178,13 @@ export const PersonasPage: React.FC = () => {
         field: 'fechaAlta',
         headerName: t('personas.fields.fechaAlta'),
         width: 160,
-        valueFormatter: (params) => formatDate(params.value as string),
+        valueFormatter: ({ value }: { value: unknown }) => formatDate(value as string),
       },
       {
         field: 'activo',
         headerName: t('personas.fields.activo'),
         width: 140,
-        renderCell: (params) => (
+        renderCell: (params: GridRenderCellParams<any, boolean>) => (
           <Chip
             label={params.value ? t('personas.status.active') : t('personas.status.inactive')}
             color={params.value ? 'success' : 'default'}
@@ -189,19 +198,19 @@ export const PersonasPage: React.FC = () => {
         type: 'actions',
         headerName: t('common.actions'),
         width: 120,
-        getActions: (params: GridRowParams<Persona>) => [
+        getActions: (params: GridRowParams) => [
           <GridActionsCellItem
             key="edit"
             icon={<EditIcon />}
             label={t('common.edit')}
-            onClick={() => handleEdit(params.row)}
+            onClick={() => handleEdit(params.row as Persona)}
             showInMenu={false}
           />,
           <GridActionsCellItem
             key="delete"
             icon={<DeleteIcon />}
             label={t('common.delete')}
-            onClick={() => handleDeleteClick(params.row.id)}
+            onClick={() => handleDeleteClick((params.row as Persona).id)}
             showInMenu={false}
           />,
         ],
@@ -216,10 +225,10 @@ export const PersonasPage: React.FC = () => {
         Object.values(persona).some((value) =>
           String(value ?? '')
             .toLowerCase()
-            .includes(searchText.trim().toLowerCase()),
+            .includes(debouncedSearchText.trim().toLowerCase()),
         ),
       ),
-    [personas, searchText],
+    [personas, debouncedSearchText],
   );
 
   if (loading) {

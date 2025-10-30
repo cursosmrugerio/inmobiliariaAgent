@@ -9,7 +9,7 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, type Resolver } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
@@ -26,8 +26,12 @@ interface PropiedadFormDialogProps {
   onSuccess: () => void;
 }
 
-type PropiedadFormValues = Omit<PropiedadCreateRequest, 'inmobiliariaId'> & {
-  inmobiliariaId: number | '';
+type PropiedadFormValues = {
+  nombre: string;
+  tipo: PropiedadTipo;
+  direccion: string;
+  observaciones: string;
+  inmobiliariaId: string;
 };
 
 const buildValidationSchema = (t: ReturnType<typeof useTranslation>['t']) =>
@@ -35,13 +39,13 @@ const buildValidationSchema = (t: ReturnType<typeof useTranslation>['t']) =>
     nombre: yup.string().required(t('propiedades.validation.nombreRequired')),
     tipo: yup
       .mixed<PropiedadTipo>()
-      .oneOf(Object.values(PropiedadTipo), t('propiedades.validation.tipoRequired')),
+      .oneOf(Object.values(PropiedadTipo), t('propiedades.validation.tipoRequired'))
+      .required(t('propiedades.validation.tipoRequired')),
     direccion: yup.string().required(t('propiedades.validation.direccionRequired')),
     inmobiliariaId: yup
-      .number()
-      .typeError(t('propiedades.validation.inmobiliariaRequired'))
+      .string()
       .required(t('propiedades.validation.inmobiliariaRequired')),
-    observaciones: yup.string().nullable(),
+    observaciones: yup.string().transform((value) => value ?? '').optional(),
   });
 
 export const PropiedadFormDialog: React.FC<PropiedadFormDialogProps> = ({
@@ -62,7 +66,7 @@ export const PropiedadFormDialog: React.FC<PropiedadFormDialogProps> = ({
     reset,
     formState: { errors, isSubmitting },
   } = useForm<PropiedadFormValues>({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema) as Resolver<PropiedadFormValues>,
     defaultValues: {
       nombre: '',
       tipo: PropiedadTipo.CASA,
@@ -79,7 +83,7 @@ export const PropiedadFormDialog: React.FC<PropiedadFormDialogProps> = ({
         tipo: propiedad.tipo,
         direccion: propiedad.direccion,
         observaciones: propiedad.observaciones,
-        inmobiliariaId: propiedad.inmobiliariaId,
+        inmobiliariaId: String(propiedad.inmobiliariaId),
       });
     } else {
       reset({
@@ -94,9 +98,11 @@ export const PropiedadFormDialog: React.FC<PropiedadFormDialogProps> = ({
 
   const onSubmit = async (formValues: PropiedadFormValues) => {
     const payload: PropiedadCreateRequest = {
-      ...formValues,
+      nombre: formValues.nombre.trim(),
+      tipo: formValues.tipo,
+      direccion: formValues.direccion.trim(),
+      observaciones: formValues.observaciones?.trim() ?? '',
       inmobiliariaId: Number(formValues.inmobiliariaId),
-      observaciones: formValues.observaciones ?? '',
     };
 
     try {
@@ -196,11 +202,8 @@ export const PropiedadFormDialog: React.FC<PropiedadFormDialogProps> = ({
                     select
                     fullWidth
                     label={t('propiedades.fields.inmobiliaria')}
-                    value={field.value === '' ? '' : Number(field.value)}
-                    onChange={(event) => {
-                      const value = event.target.value;
-                      field.onChange(value === '' ? '' : Number(value));
-                    }}
+                    value={field.value}
+                    onChange={field.onChange}
                     error={Boolean(errors.inmobiliariaId)}
                     helperText={errors.inmobiliariaId?.message}
                   >
