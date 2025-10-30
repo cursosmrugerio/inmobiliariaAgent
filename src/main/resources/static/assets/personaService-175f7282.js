@@ -1,1 +1,0 @@
-import{w as s}from"./index-887becf6.js";const r={getAll:async()=>(await s.get("/personas")).data,getById:async e=>(await s.get(`/personas/${e}`)).data,create:async e=>(await s.post("/personas",e)).data,update:async(e,a)=>(await s.put(`/personas/${e}`,a)).data,delete:async e=>{await s.delete(`/personas/${e}`)}};export{r as p};

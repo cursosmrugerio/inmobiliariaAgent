@@ -127,10 +127,8 @@
       "activo": "Activo"
     },
     "tipos": {
-      "ARRENDADOR": "Arrendador",
-      "ARRENDATARIO": "Arrendatario",
-      "FIADOR": "Fiador",
-      "OTRO": "Otro"
+      "FISICA": "Persona Física",
+      "MORAL": "Persona Moral"
     },
     "status": {
       "active": "Activo",

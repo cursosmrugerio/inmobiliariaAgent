@@ -1,0 +1,1 @@
+import{w as t}from"./index-83d1839a.js";var s=(a=>(a.INMOBILIARIA="inmobiliaria",a.PROPIEDAD="propiedad",a.PERSONA="persona",a))(s||{});const o={[s.INMOBILIARIA]:"/agent/chat",[s.PROPIEDAD]:"/agent/propiedades/chat",[s.PERSONA]:"/agent/personas/chat"},p={sendMessage:async(a,e)=>{const n=o[a];return(await t.post(n,e)).data}};export{s as A,p as a};

@@ -149,15 +149,15 @@ export const PersonasPage: React.FC = () => {
         field: 'tipoPersona',
         headerName: t('personas.fields.tipoPersona'),
         width: 160,
-        valueFormatter: ({ value }: { value: unknown }) =>
-          t(`personas.tipos.${value as PersonaTipo}`),
+        valueFormatter: (value: PersonaTipo) =>
+          t(`personas.tipos.${value}`),
       },
       {
         field: 'nombreCompleto',
         headerName: t('personas.fields.nombre'),
         flex: 1,
         minWidth: 220,
-        valueGetter: (params: any) => formatDisplayName(params.row as Persona),
+        valueGetter: (_value: any, row: Persona) => formatDisplayName(row),
       },
       {
         field: 'rfc',

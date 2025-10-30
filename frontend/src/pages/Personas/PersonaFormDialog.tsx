@@ -49,20 +49,14 @@ const buildValidationSchema = (t: ReturnType<typeof useTranslation>['t']) =>
     nombre: yup
       .string()
       .when('tipoPersona', {
-        is: (value: PersonaTipo) =>
-          value === PersonaTipo.ARRENDADOR ||
-          value === PersonaTipo.ARRENDATARIO ||
-          value === PersonaTipo.FIADOR,
+        is: (value: PersonaTipo) => value === PersonaTipo.FISICA,
         then: (schema) => schema.required(t('personas.validation.nombreRequired')),
         otherwise: (schema) => schema.optional(),
       }),
     apellidos: yup
       .string()
       .when('tipoPersona', {
-        is: (value: PersonaTipo) =>
-          value === PersonaTipo.ARRENDADOR ||
-          value === PersonaTipo.ARRENDATARIO ||
-          value === PersonaTipo.FIADOR,
+        is: (value: PersonaTipo) => value === PersonaTipo.FISICA,
         then: (schema) => schema.required(t('personas.validation.apellidosRequired')),
         otherwise: (schema) => schema.optional(),
       }),
@@ -75,7 +69,7 @@ const buildValidationSchema = (t: ReturnType<typeof useTranslation>['t']) =>
     activo: yup.boolean(),
   });
 
-const shouldShowCompanyFields = (tipoPersona: PersonaTipo) => tipoPersona === PersonaTipo.OTRO;
+const shouldShowCompanyFields = (tipoPersona: PersonaTipo) => tipoPersona === PersonaTipo.MORAL;
 
 export const PersonaFormDialog: React.FC<PersonaFormDialogProps> = ({
   open,
@@ -96,7 +90,7 @@ export const PersonaFormDialog: React.FC<PersonaFormDialogProps> = ({
   } = useForm<PersonaFormValues>({
     resolver: yupResolver(validationSchema) as Resolver<PersonaFormValues>,
     defaultValues: {
-      tipoPersona: PersonaTipo.ARRENDADOR,
+      tipoPersona: PersonaTipo.FISICA,
       nombre: '',
       apellidos: '',
       razonSocial: '',
@@ -130,7 +124,7 @@ export const PersonaFormDialog: React.FC<PersonaFormDialogProps> = ({
       });
     } else {
       reset({
-        tipoPersona: PersonaTipo.ARRENDADOR,
+        tipoPersona: PersonaTipo.FISICA,
         nombre: '',
         apellidos: '',
         razonSocial: '',

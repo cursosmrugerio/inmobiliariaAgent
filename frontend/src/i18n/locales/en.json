@@ -127,10 +127,8 @@
       "activo": "Active"
     },
     "tipos": {
-      "ARRENDADOR": "Landlord",
-      "ARRENDATARIO": "Tenant",
-      "FIADOR": "Guarantor",
-      "OTRO": "Other"
+      "FISICA": "Individual",
+      "MORAL": "Company"
     },
     "status": {
       "active": "Active",

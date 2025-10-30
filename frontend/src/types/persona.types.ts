@@ -1,8 +1,6 @@
 export enum PersonaTipo {
-  ARRENDADOR = 'ARRENDADOR',
-  ARRENDATARIO = 'ARRENDATARIO',
-  FIADOR = 'FIADOR',
-  OTRO = 'OTRO',
+  FISICA = 'FISICA',
+  MORAL = 'MORAL',
 }
 
 export interface Persona {

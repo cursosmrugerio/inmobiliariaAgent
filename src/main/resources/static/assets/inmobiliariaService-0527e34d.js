@@ -1,1 +1,0 @@
-import{w as e}from"./index-887becf6.js";const n={getAll:async()=>(await e.get("/inmobiliarias")).data,getById:async a=>(await e.get(`/inmobiliarias/${a}`)).data,create:async a=>(await e.post("/inmobiliarias",a)).data,update:async(a,s)=>(await e.put(`/inmobiliarias/${a}`,s)).data,delete:async a=>{await e.delete(`/inmobiliarias/${a}`)}};export{n as i};
