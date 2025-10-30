@@ -9,6 +9,7 @@
     "cancel": "Cancelar",
     "save": "Guardar",
     "search": "Buscar",
+    "all": "Todos",
     "actions": "Acciones",
     "loading": "Cargando...",
     "noData": "No hay datos disponibles",
@@ -101,6 +102,12 @@
       "OFICINA": "Oficina",
       "BODEGA": "Bodega",
       "TERRENO": "Terreno"
+    },
+    "validation": {
+      "nombreRequired": "El nombre es requerido",
+      "tipoRequired": "El tipo es requerido",
+      "direccionRequired": "La dirección es requerida",
+      "inmobiliariaRequired": "La inmobiliaria es requerida"
     }
   },
   "personas": {

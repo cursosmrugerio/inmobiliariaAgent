@@ -9,6 +9,7 @@
     "cancel": "Cancel",
     "save": "Save",
     "search": "Search",
+    "all": "All",
     "actions": "Actions",
     "loading": "Loading...",
     "noData": "No data available",
@@ -101,6 +102,12 @@
       "OFICINA": "Office",
       "BODEGA": "Warehouse",
       "TERRENO": "Land"
+    },
+    "validation": {
+      "nombreRequired": "Name is required",
+      "tipoRequired": "Type is required",
+      "direccionRequired": "Address is required",
+      "inmobiliariaRequired": "Agency selection is required"
     }
   },
   "personas": {
