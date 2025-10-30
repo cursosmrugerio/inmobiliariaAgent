@@ -1,12 +1,14 @@
 package com.inmobiliaria.gestion.inmobiliaria.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
 @Schema(description = "Payload para actualizar una inmobiliaria existente")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class UpdateInmobiliariaRequest {
 
   private final String nombre;

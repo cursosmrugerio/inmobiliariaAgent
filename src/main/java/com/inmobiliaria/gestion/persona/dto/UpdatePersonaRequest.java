@@ -1,6 +1,7 @@
 package com.inmobiliaria.gestion.persona.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.inmobiliaria.gestion.persona.domain.PersonaTipo;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Schema(description = "Payload para actualizar los datos de una persona existente")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class UpdatePersonaRequest {
 
   private final PersonaTipo tipoPersona;
