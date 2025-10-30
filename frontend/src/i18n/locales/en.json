@@ -79,7 +79,8 @@
       "rfcRequired": "RFC is required",
       "rfcInvalid": "Invalid RFC",
       "correoRequired": "Email is required",
-      "correoInvalid": "Invalid email address"
+      "correoInvalid": "Invalid email address",
+      "telefonoRequired": "Phone is required"
     }
   },
   "propiedades": {
