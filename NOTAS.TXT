@@ -1,0 +1,10 @@
+Default Credentials Created:
+  - Email: admin@test.com
+  - Password: admin123
+  - Role: ADMIN
+--------
+In the H2 console login form, update the JDBC URL to:
+ jdbc:h2:file:./data/testdb;AUTO_SERVER=TRUE
+Keep the username as SA and leave the password blank
+
+
