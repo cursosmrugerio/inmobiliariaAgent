@@ -1,17 +1,46 @@
+# OS-specific
 **/.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE
 .idea/
 *.iml
+.vscode/
+.eclipse/
+.settings/
+.classpath
+.project
+.factorypath
+bin/
+
+# Maven
 target/
 .mvn/
 mvnw
 mvnw.cmd
+
+# Logs
 *.log
 *.tmp
+
+# Playwright MCP
 .playwright-mcp/
+
+# H2 Database files
 /data/
 *.mv.db
 *.trace.db
-data/testdb.mv.db
+*.lock.db
+
+# Frontend/Node.js
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
 
 # Google Cloud credentials - NEVER commit
 credentials.json
+**/credentials.json
