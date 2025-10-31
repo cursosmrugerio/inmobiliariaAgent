@@ -7,6 +7,7 @@ This directory contains all the necessary configuration files and documentation 
 ### Main Documentation
 - **`CRITICAL-PRODUCTION-CHECKLIST.md`** - ⚠️ **READ THIS FIRST!** Critical security, configuration, and deployment considerations
 - **`DEPLOYMENT-PRODUCTION.md`** - Complete step-by-step deployment guide for Google Cloud Run with Supabase PostgreSQL and GitHub Actions CI/CD
+- **`H2-TEMPORARY-SETUP.md`** - ⚠️ **TEMPORARY H2 Configuration** - File-based H2 setup for initial testing, limitations, and PostgreSQL migration path
 - **`CONFIGURATION-COMPARISON.md`** - Detailed comparison of development vs test vs production configuration
 
 ### Project Standards
@@ -59,13 +60,15 @@ Before production deployment, test the application locally with Vertex AI:
 Before deploying, ensure you have:
 
 ### Infrastructure
-- [ ] Supabase account and PostgreSQL database created
+- [ ] **Database choice made**: H2 temporary (initial testing) OR PostgreSQL (production)
+  - If H2: Review `H2-TEMPORARY-SETUP.md` for limitations and migration path
+  - If PostgreSQL: Supabase account and database created
 - [ ] Google Cloud Platform project with billing enabled
 - [ ] GitHub repository with required secrets configured
 - [ ] Service accounts created (Cloud Run + GitHub Actions)
 - [ ] Vertex AI APIs enabled
 - [ ] JWT secret generated (64+ characters)
-- [ ] Production frontend URL configured in SecurityConfig.java
+- [ ] Production frontend URL configured in SecurityConfig.java (if deploying separately)
 
 ### Code Quality
 - [ ] All tests pass (`mvn clean test`)

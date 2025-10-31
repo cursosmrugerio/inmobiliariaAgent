@@ -43,7 +43,11 @@ WORKDIR /app
 # Copy built JAR from builder stage
 COPY --from=builder /app/target/gestion-*.jar app.jar
 
-# Create directory for file-based data (if needed)
+# Create directory for H2 file-based database (TEMPORARY production setup)
+# ⚠️ WARNING: Data in this directory is ephemeral in Cloud Run
+# - Data persists ONLY during container lifetime
+# - Data is LOST on container restart, redeployment, or scaling
+# - For production, migrate to PostgreSQL/Supabase with persistent storage
 RUN mkdir -p /app/data && chown -R appuser:appuser /app
 
 # Switch to non-root user
