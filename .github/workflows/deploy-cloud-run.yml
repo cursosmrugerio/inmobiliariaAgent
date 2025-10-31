@@ -87,8 +87,24 @@ jobs:
 
       - name: Test deployment
         run: |
-          sleep 30
-          curl -f ${{ steps.get-url.outputs.SERVICE_URL }}/actuator/health || exit 1
+          echo "Waiting for service to become healthy..."
+          sleep 45
+
+          # Retry health check up to 6 times (90 seconds total)
+          for i in {1..6}; do
+            echo "Health check attempt $i/6..."
+            if curl -f ${{ steps.get-url.outputs.SERVICE_URL }}/actuator/health; then
+              echo "✓ Service is healthy!"
+              exit 0
+            fi
+            if [ $i -lt 6 ]; then
+              echo "Health check failed. Retrying in 15 seconds..."
+              sleep 15
+            fi
+          done
+
+          echo "✗ Service did not become healthy after 6 attempts"
+          exit 1
 
       - name: Create deployment summary
         run: |
