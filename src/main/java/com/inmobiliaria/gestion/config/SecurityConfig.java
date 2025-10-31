@@ -40,6 +40,7 @@ public class SecurityConfig {
                         "/",
                         "/index.html",
                         "/assets/**",
+                        "/vite.svg",
                         "/favicon.ico",
                         "/login",
                         "/chat",
