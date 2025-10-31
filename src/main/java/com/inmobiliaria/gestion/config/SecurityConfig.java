@@ -2,7 +2,9 @@ package com.inmobiliaria.gestion.config;
 
 import com.inmobiliaria.gestion.auth.security.JwtAuthenticationFilter;
 import java.time.Clock;
+import java.util.Arrays;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +22,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+  @Value("${cors.allowed-origins}")
+  private String allowedOrigins;
 
   @Bean
   public SecurityFilterChain securityFilterChain(
@@ -68,8 +73,12 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(
-        List.of("http://localhost:5173", "http://localhost:8080", "https://localhost:8080"));
+
+    // Parse comma-separated origins from environment variable
+    // Supports: "http://localhost:5173,http://localhost:8080,https://your-domain.com"
+    List<String> origins = Arrays.asList(allowedOrigins.split(","));
+    config.setAllowedOrigins(origins);
+
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);
