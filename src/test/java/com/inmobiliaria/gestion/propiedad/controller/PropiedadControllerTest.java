@@ -52,7 +52,7 @@ class PropiedadControllerTest {
 
     mockMvc
         .perform(
-            post("/propiedades")
+            post("/api/propiedades")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isCreated())
@@ -75,7 +75,7 @@ class PropiedadControllerTest {
     propiedadRepository.save(segunda);
 
     mockMvc
-        .perform(get("/propiedades"))
+        .perform(get("/api/propiedades"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()").value(2));
   }
@@ -90,7 +90,8 @@ class PropiedadControllerTest {
     propiedadRepository.save(buildPropiedad("Local Dos", PropiedadTipo.LOCAL, inmobiliariaDos));
 
     mockMvc
-        .perform(get("/propiedades").param("inmobiliariaId", inmobiliariaUno.getId().toString()))
+        .perform(
+            get("/api/propiedades").param("inmobiliariaId", inmobiliariaUno.getId().toString()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()").value(1))
         .andExpect(jsonPath("$[0].inmobiliariaId").value(inmobiliariaUno.getId()));
@@ -100,7 +101,7 @@ class PropiedadControllerTest {
   @DisplayName("Debe devolver 404 al filtrar por una inmobiliaria inexistente")
   void shouldReturnNotFoundWhenFilteringWithUnknownInmobiliaria() throws Exception {
     mockMvc
-        .perform(get("/propiedades").param("inmobiliariaId", "999"))
+        .perform(get("/api/propiedades").param("inmobiliariaId", "999"))
         .andExpect(status().isNotFound());
   }
 
@@ -113,7 +114,7 @@ class PropiedadControllerTest {
     propiedad = propiedadRepository.save(propiedad);
 
     mockMvc
-        .perform(get("/propiedades/{id}", propiedad.getId()))
+        .perform(get("/api/propiedades/{id}", propiedad.getId()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(propiedad.getId()))
         .andExpect(jsonPath("$.nombre").value("Departamento Central"));
@@ -132,7 +133,7 @@ class PropiedadControllerTest {
 
     mockMvc
         .perform(
-            put("/propiedades/{id}", propiedad.getId())
+            put("/api/propiedades/{id}", propiedad.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
@@ -150,7 +151,7 @@ class PropiedadControllerTest {
     propiedad = propiedadRepository.save(propiedad);
 
     mockMvc
-        .perform(delete("/propiedades/{id}", propiedad.getId()))
+        .perform(delete("/api/propiedades/{id}", propiedad.getId()))
         .andExpect(status().isNoContent());
 
     assertThat(propiedadRepository.existsById(propiedad.getId())).isFalse();

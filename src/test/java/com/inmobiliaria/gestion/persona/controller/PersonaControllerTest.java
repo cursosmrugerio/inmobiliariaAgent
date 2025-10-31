@@ -56,7 +56,7 @@ class PersonaControllerTest {
 
     mockMvc
         .perform(
-            post("/personas")
+            post("/api/personas")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isCreated())
@@ -75,7 +75,7 @@ class PersonaControllerTest {
     personaRepository.save(buildPersona("Comercial Delta", PersonaTipo.MORAL));
 
     mockMvc
-        .perform(get("/personas"))
+        .perform(get("/api/personas"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()").value(2));
   }
@@ -86,7 +86,7 @@ class PersonaControllerTest {
     Persona persona = personaRepository.save(buildPersona("Ana", PersonaTipo.FISICA));
 
     mockMvc
-        .perform(get("/personas/{id}", persona.getId()))
+        .perform(get("/api/personas/{id}", persona.getId()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(persona.getId()))
         .andExpect(jsonPath("$.nombre").value("Ana"));
@@ -95,7 +95,7 @@ class PersonaControllerTest {
   @Test
   @DisplayName("Debe devolver 404 al consultar una persona inexistente")
   void shouldReturnNotFoundWhenPersonaMissing() throws Exception {
-    mockMvc.perform(get("/personas/{id}", 999)).andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/personas/{id}", 999)).andExpect(status().isNotFound());
   }
 
   @Test
@@ -118,7 +118,7 @@ class PersonaControllerTest {
 
     mockMvc
         .perform(
-            put("/personas/{id}", persona.getId())
+            put("/api/personas/{id}", persona.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
@@ -132,7 +132,9 @@ class PersonaControllerTest {
   void shouldDeletePersona() throws Exception {
     Persona persona = personaRepository.save(buildPersona("Ana", PersonaTipo.FISICA));
 
-    mockMvc.perform(delete("/personas/{id}", persona.getId())).andExpect(status().isNoContent());
+    mockMvc
+        .perform(delete("/api/personas/{id}", persona.getId()))
+        .andExpect(status().isNoContent());
 
     assertThat(personaRepository.existsById(persona.getId())).isFalse();
   }
@@ -146,7 +148,7 @@ class PersonaControllerTest {
 
     mockMvc
         .perform(
-            post("/personas")
+            post("/api/personas")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidRequest)))
         .andExpect(status().isBadRequest());
