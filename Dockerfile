@@ -1,0 +1,70 @@
+# Multi-stage Dockerfile for Inmobiliaria Management System
+# Optimized for production deployment on Google Cloud Run
+
+# ============================================
+# Stage 1: Build Stage
+# ============================================
+FROM maven:3.9-eclipse-temurin-25 AS builder
+
+WORKDIR /app
+
+# Copy dependency definitions first (for layer caching)
+COPY pom.xml .
+
+# Download dependencies (cached if pom.xml hasn't changed)
+RUN mvn dependency:go-offline -B
+
+# Copy source code
+COPY src ./src
+
+# Build application (skip tests for faster builds - tests run in CI/CD)
+RUN mvn clean package -DskipTests -B
+
+# Verify the JAR was created
+RUN ls -lh /app/target/*.jar
+
+# ============================================
+# Stage 2: Runtime Stage
+# ============================================
+FROM eclipse-temurin:25-jre-jammy
+
+# Install curl for health checks
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create non-root user for security
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+WORKDIR /app
+
+# Copy built JAR from builder stage
+COPY --from=builder /app/target/gestion-*.jar app.jar
+
+# Create directory for H2 file-based database (TEMPORARY production setup)
+# ⚠️ WARNING: Data in this directory is ephemeral in Cloud Run
+# - Data persists ONLY during container lifetime
+# - Data is LOST on container restart, redeployment, or scaling
+# - For production, migrate to PostgreSQL/Supabase with persistent storage
+RUN mkdir -p /app/data && chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# Expose application port
+EXPOSE 8080
+
+# Health check configuration
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# JVM optimization flags for Cloud Run
+ENV JAVA_OPTS="-XX:+UseContainerSupport \
+               -XX:MaxRAMPercentage=75.0 \
+               -XX:+UseG1GC \
+               -XX:+UseStringDeduplication \
+               -Djava.security.egd=file:/dev/./urandom"
+
+# Run the application
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

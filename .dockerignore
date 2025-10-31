@@ -1,0 +1,68 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+
+# Build outputs (will be built inside container)
+target/
+build/
+out/
+bin/
+
+# Maven wrapper (using container's Maven)
+.mvn/wrapper/maven-wrapper.jar
+
+# Local data files
+data/
+*.mv.db
+*.trace.db
+
+# Logs
+logs/
+*.log
+
+# Test files
+src/test/
+
+# Documentation
+docs/
+*.md
+README.md
+
+# CI/CD files
+.github/
+.gitlab-ci.yml
+cloudbuild.yaml
+
+# Environment files
+.env
+.env.*
+*.env
+credentials.json
+*-key.json
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+
+# Scripts (not needed in container)
+scripts/
+run-agent.sh
