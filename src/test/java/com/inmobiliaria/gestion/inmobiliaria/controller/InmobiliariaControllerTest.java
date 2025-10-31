@@ -44,7 +44,7 @@ class InmobiliariaControllerTest {
 
     mockMvc
         .perform(
-            post("/inmobiliarias")
+            post("/api/inmobiliarias")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isCreated())
@@ -67,7 +67,7 @@ class InmobiliariaControllerTest {
     inmobiliariaRepository.saveAll(List.of(first, second));
 
     mockMvc
-        .perform(get("/inmobiliarias"))
+        .perform(get("/api/inmobiliarias"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()").value(2));
   }
@@ -80,7 +80,7 @@ class InmobiliariaControllerTest {
     entity = inmobiliariaRepository.save(entity);
 
     mockMvc
-        .perform(get("/inmobiliarias/{id}", entity.getId()))
+        .perform(get("/api/inmobiliarias/{id}", entity.getId()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.id").value(entity.getId()))
         .andExpect(jsonPath("$.nombre").value("Objetivo"));
@@ -99,7 +99,7 @@ class InmobiliariaControllerTest {
 
     mockMvc
         .perform(
-            put("/inmobiliarias/{id}", entity.getId())
+            put("/api/inmobiliarias/{id}", entity.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk())
@@ -119,7 +119,7 @@ class InmobiliariaControllerTest {
     entity = inmobiliariaRepository.save(entity);
 
     mockMvc
-        .perform(delete("/inmobiliarias/{id}", entity.getId()))
+        .perform(delete("/api/inmobiliarias/{id}", entity.getId()))
         .andExpect(status().isNoContent());
 
     assertThat(inmobiliariaRepository.existsById(entity.getId())).isFalse();
