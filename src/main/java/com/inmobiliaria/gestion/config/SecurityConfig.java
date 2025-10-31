@@ -53,7 +53,7 @@ public class SecurityConfig {
                     .requestMatchers("/h2-console/**")
                     .permitAll()
                     .requestMatchers("/api/agent/**")
-                    .permitAll() // TEMPORARY: Allow testing without auth
+                    .authenticated() // ✅ Authentication enabled for production security
                     .anyRequest()
                     .authenticated())
         .sessionManagement(
