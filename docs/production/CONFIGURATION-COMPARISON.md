@@ -1,19 +1,27 @@
-# Configuration Comparison: Development vs Production
+# Configuration Comparison: Development vs Test vs Production
 
 ## Overview
 
-This document compares the Google Cloud / Vertex AI configuration between local development and production deployment on Cloud Run.
+This document compares the configuration across all three environments: local development, automated testing, and production deployment on Cloud Run.
 
 ## Configuration Matrix
 
-| Setting | Development | Production (Cloud Run) | Notes |
-|---------|------------|------------------------|-------|
-| **Authentication** | File-based credentials | Workload Identity | Production is more secure |
-| **Credentials File** | `~/inmobiliaria-service-account-key.json` | Not used | File never deployed to Cloud Run |
-| **Project ID** | `inmobiliaria-adk` | From GitHub Secret `GCP_PROJECT_ID` | Update secret if different |
-| **Location/Region** | `us-central1` | `us-central1` | ✅ Same |
-| **Vertex AI Enabled** | `true` | `true` | ✅ Same |
-| **Service Account** | Uses JSON key file | `inmobiliaria-cloudrun@{PROJECT}.iam.gserviceaccount.com` | Different accounts |
+| Setting | Development | Test | Production (Cloud Run) | Notes |
+|---------|------------|------|------------------------|-------|
+| **Java Version** | 25 | 25 | 25 | ✅ Consistent across environments |
+| **Spring Boot** | 3.5.7 | 3.5.7 | 3.5.7 | ✅ Same version |
+| **Database** | H2 file-based | H2 in-memory | PostgreSQL (Supabase) | Different per environment |
+| **DDL Strategy** | `validate` | `create-drop` | `validate` | Test creates fresh schema |
+| **Flyway** | Enabled | Disabled | Enabled | Test uses in-memory schema |
+| **Authentication** | File-based credentials | N/A | Workload Identity | Production is more secure |
+| **Credentials File** | `/Users/mike/Desarrollo/compyser/inmobiliaria/backend/credentials.json` | Not used | Not used | Dev only |
+| **Project ID** | `inmobiliaria-adk` | N/A | From GitHub Secret `GCP_PROJECT_ID` | Update secret if different |
+| **Location/Region** | `us-central1` | N/A | `us-central1` | ✅ Same |
+| **Vertex AI Enabled** | `true` | N/A (mocked) | `true` | Tests don't call real AI |
+| **Service Account** | Uses JSON key file | N/A | `inmobiliaria-cloudrun@{PROJECT}.iam.gserviceaccount.com` | Different accounts |
+| **Swagger UI** | Enabled | N/A | Disabled | Security requirement |
+| **H2 Console** | Enabled | N/A | Disabled | Development tool only |
+| **Logging Level** | DEBUG (app) | DEBUG (app) | INFO (app) | Test/Dev more verbose |
 
 ## Environment Variables
 
@@ -162,6 +170,36 @@ When moving from development to production:
 - [ ] Verify logs show successful Vertex AI connections
 - [ ] Remove any local credential files from Docker images
 
+## Code Patterns & Dependencies
+
+### DTO Implementation Pattern
+- **Pattern Used**: Final classes with manual constructors
+- **Why Not Records**: Compatibility with Jakarta Bean Validation annotations
+- **Example**:
+  ```java
+  public final class CreateInmobiliariaDTO {
+      private final String nombre;
+      private final String rfc;
+      // Constructor, getters, validation annotations...
+  }
+  ```
+
+### Lombok Usage
+- **Status**: Dependency available but **NOT actively used**
+- **Reason**: Manual implementations preferred for consistency
+- **If Adding Lombok**: Ensure IDE annotation processing is configured
+- **Current Approach**: Manual getters/setters, constructors, and logger initialization
+
+### Code Formatting
+- **Tool**: `fmt-maven-plugin` v2.9.1
+- **Standard**: Google Java Style Guide
+- **Enforcement**: CI/CD pipeline checks formatting
+- **Commands**:
+  ```bash
+  mvn fmt:check   # Verify formatting
+  mvn fmt:format  # Auto-format code
+  ```
+
 ## Best Practices
 
 ### Development
@@ -170,6 +208,9 @@ When moving from development to production:
 3. ✅ Never commit credential files
 4. ✅ Use `.gitignore` for `credentials.json` and `*-key.json`
 5. ✅ Rotate service account keys periodically
+6. ✅ Follow Google Java Style Guide (`mvn fmt:format`)
+7. ✅ Run tests before committing (`mvn clean test`)
+8. ✅ Review `CLAUDE.md` for project standards
 
 ### Production
 1. ✅ Use Workload Identity (no credential files)
@@ -178,6 +219,7 @@ When moving from development to production:
 4. ✅ Use different GCP projects for dev/staging/prod
 5. ✅ Monitor service account usage
 6. ✅ Enable audit logging
+7. ✅ Verify code formatting passes (`mvn fmt:check`)
 
 ## Additional Resources
 

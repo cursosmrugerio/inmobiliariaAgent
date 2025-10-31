@@ -4,7 +4,7 @@
 # ============================================
 # Stage 1: Build Stage
 # ============================================
-FROM maven:3.9-eclipse-temurin-21 AS builder
+FROM maven:3.9-eclipse-temurin-25 AS builder
 
 WORKDIR /app
 
@@ -27,7 +27,7 @@ RUN ls -lh /app/target/*.jar
 # ============================================
 # Stage 2: Runtime Stage
 # ============================================
-FROM eclipse-temurin:21-jre-jammy
+FROM eclipse-temurin:25-jre-jammy
 
 # Install curl for health checks
 RUN apt-get update && \

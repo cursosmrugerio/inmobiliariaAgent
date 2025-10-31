@@ -7,7 +7,10 @@ This directory contains all the necessary configuration files and documentation 
 ### Main Documentation
 - **`CRITICAL-PRODUCTION-CHECKLIST.md`** - ⚠️ **READ THIS FIRST!** Critical security, configuration, and deployment considerations
 - **`DEPLOYMENT-PRODUCTION.md`** - Complete step-by-step deployment guide for Google Cloud Run with Supabase PostgreSQL and GitHub Actions CI/CD
-- **`CONFIGURATION-COMPARISON.md`** - Detailed comparison of development vs production configuration
+- **`CONFIGURATION-COMPARISON.md`** - Detailed comparison of development vs test vs production configuration
+
+### Project Standards
+- **`../CLAUDE.md`** - ⭐ **Project Constitution** - Architecture principles, code style (Google Java Style Guide), DTO patterns, testing standards, and AI agent implementation guidelines. **Review this before making any code changes.**
 
 ### Docker Configuration
 - **`Dockerfile`** - Multi-stage Docker build configuration optimized for production
@@ -55,13 +58,21 @@ Before production deployment, test the application locally with Vertex AI:
 
 Before deploying, ensure you have:
 
+### Infrastructure
 - [ ] Supabase account and PostgreSQL database created
 - [ ] Google Cloud Platform project with billing enabled
 - [ ] GitHub repository with required secrets configured
 - [ ] Service accounts created (Cloud Run + GitHub Actions)
 - [ ] Vertex AI APIs enabled
-- [ ] JWT secret generated
+- [ ] JWT secret generated (64+ characters)
 - [ ] Production frontend URL configured in SecurityConfig.java
+
+### Code Quality
+- [ ] All tests pass (`mvn clean test`)
+- [ ] Code formatting passes (`mvn fmt:check`)
+- [ ] Review `CLAUDE.md` for compliance with project standards
+- [ ] Agent endpoints security reviewed (remove `.permitAll()`)
+- [ ] Test scripts executed successfully (see `scripts/` directory)
 
 ## 🔗 Related Documentation
 
@@ -71,16 +82,29 @@ Before deploying, ensure you have:
 
 ## ⚠️ Important Notes
 
-1. **These are template files** - You must update placeholders with your actual values:
+1. **These are template files** - They MUST be copied to the project root before deployment:
+   - `Dockerfile` → project root
+   - `.dockerignore` → project root
+   - `application-prod.properties` → `src/main/resources/`
+   - `github-workflows/*.yml` → `.github/workflows/`
+
+   **Update placeholders with your actual values:**
    - Supabase PROJECT_REF in `application-prod.properties`
    - GCP_PROJECT_ID in GitHub workflows
    - Production domain URLs in SecurityConfig
 
-2. **Never commit secrets** - Use environment variables and GitHub Secrets
+2. **Technology versions** (Java 25, Spring Boot 3.5.7):
+   - All files have been updated to use Java 25
+   - Ensure local environment matches production versions
+   - See `DEPLOYMENT-PRODUCTION.md` for complete version information
 
-3. **Test locally first** - Build and test Docker image before deploying
+3. **Never commit secrets** - Use environment variables and GitHub Secrets
 
-4. **Review security settings** - Ensure H2 console is disabled, Swagger is secured, and agent endpoints require authentication
+4. **Test locally first** - Build and test Docker image before deploying
+
+5. **Review security settings** - Ensure H2 console is disabled, Swagger is secured, and agent endpoints require authentication
+
+6. **Follow project standards** - Review `CLAUDE.md` for code style, DTO patterns, and architectural guidelines
 
 ## 🆘 Getting Help
 

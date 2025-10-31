@@ -97,11 +97,14 @@ spring.jpa.show-sql=true                  # ❌ Logs sensitive data
 
 ### ⚠️ Agent Endpoints Currently PUBLIC
 
-**Current Issue** (in `SecurityConfig.java`):
+**Current Issue** (in `SecurityConfig.java:75`):
 ```java
 // ❌ TEMPORARY - Currently allows public access
+// TODO: Enable authentication once frontend integration is ready
 .requestMatchers("/api/agent/**").permitAll()
 ```
+
+**Status**: This is a **known temporary state** marked with TODO comments in the codebase. The code explicitly documents this as requiring authentication before production deployment.
 
 **Risk**: Anyone can use your AI agents without authentication, causing:
 - Unauthorized Vertex AI usage (costs you money!)
@@ -115,9 +118,11 @@ spring.jpa.show-sql=true                  # ❌ Logs sensitive data
 ```
 
 **Action items:**
-- [ ] **CRITICAL**: Remove `.permitAll()` from agent endpoints
+- [ ] **CRITICAL**: Remove `.permitAll()` from agent endpoints in `SecurityConfig.java:75`
+- [ ] Remove the TODO comment once authentication is enabled
 - [ ] Require JWT authentication for all `/api/agent/**` endpoints
 - [ ] Test that unauthenticated requests are rejected (HTTP 401)
+- [ ] Verify frontend can pass JWT tokens to agent endpoints
 - [ ] Monitor API usage for suspicious activity
 
 ### ⚠️ CORS Configuration
@@ -454,7 +459,9 @@ JWT_SECRET={from-secret}                 # From Secret Manager
 - [ ] Service accounts created and permissions granted
 - [ ] Database connection tested
 - [ ] Docker image builds successfully locally
-- [ ] All tests pass
+- [ ] All tests pass (mvn clean test)
+- [ ] Code formatting passes (mvn fmt:check)
+- [ ] Review CLAUDE.md for project standards compliance
 
 # During deployment:
 - [ ] Watch GitHub Actions logs
@@ -527,9 +534,11 @@ JWT_SECRET={from-secret}                 # From Secret Manager
 
 ### Testing (CRITICAL)
 - [ ] Docker image builds successfully
-- [ ] All tests pass locally
+- [ ] All tests pass locally (`mvn clean test`)
+- [ ] Code formatting check passes (`mvn fmt:check`)
 - [ ] Application starts with production config locally
 - [ ] Database migrations tested locally
+- [ ] Test scripts executed successfully (see `scripts/` directory)
 
 ### Monitoring (CRITICAL)
 - [ ] Billing alerts configured

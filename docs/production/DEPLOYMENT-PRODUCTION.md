@@ -36,15 +36,42 @@ Before starting the deployment process, ensure you have:
 # Verify installed tools
 gcloud --version          # Google Cloud SDK
 docker --version          # Docker Engine
-mvn --version            # Apache Maven 3.8+
+mvn --version            # Apache Maven 3.9+
 java --version           # Java 25
 git --version            # Git
 ```
+
+### Technology Stack
+- **Java**: 25
+- **Spring Boot**: 3.5.7
+- **Maven**: 3.9
+- **Google ADK**: 0.3.0
+- **Springdoc OpenAPI**: 2.5.0
 
 ### Installation (if needed)
 - **gcloud CLI**: https://cloud.google.com/sdk/docs/install
 - **Docker**: https://docs.docker.com/get-docker/
 - **Maven**: https://maven.apache.org/install.html
+
+### Project Standards & Guidelines
+
+**IMPORTANT**: Before making any changes to the codebase, review the `CLAUDE.md` file in the project root. This file serves as the **project constitution** and defines:
+
+- **Architecture**: Layered DDD principles, package structure by business modules
+- **Code Style**: Google Java Style Guide (enforced by `fmt-maven-plugin`)
+- **DTO Pattern**: Final classes with manual constructors (not Java records) for validation compatibility
+- **Testing**: JUnit 5 + Mockito for unit tests, `@SpringBootTest` for integration tests
+- **Lombok**: Available but not actively used - prefer manual implementations
+- **AI Agent Patterns**: Google ADK integration patterns and best practices
+
+**Code Quality Checks**:
+```bash
+# Format check (required before committing)
+mvn fmt:check
+
+# Auto-format code
+mvn fmt:format
+```
 
 ---
 
@@ -668,6 +695,58 @@ gcloud run services remove-iam-policy-binding $SERVICE_NAME \
   --region=$REGION \
   --member="allUsers" \
   --role="roles/run.invoker"
+```
+
+---
+
+## Development Testing Scripts
+
+The project includes automated testing scripts in the `scripts/` directory for testing the application and AI agents:
+
+### Available Test Scripts
+
+**1. Agent Testing Scripts**
+```bash
+# Test inmobiliarias agent with full CRUD operations
+./scripts/test-agent_inmobiliarias.sh
+
+# Test propiedades agent
+./scripts/test-agent_propiedades.sh
+
+# Set environment variables before running agent tests:
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/credentials.json"
+export GOOGLE_GENAI_USE_VERTEXAI=true
+export GOOGLE_CLOUD_PROJECT=your-project-id
+export GOOGLE_CLOUD_LOCATION=us-central1
+```
+
+**2. API Testing Scripts**
+```bash
+# Test inmobiliarias CRUD endpoints
+./scripts/test-inmobiliarias.sh
+
+# Options:
+START_SERVER=0 ./scripts/test-inmobiliarias.sh  # Use already running server
+START_SERVER=1 ./scripts/test-inmobiliarias.sh  # Start server automatically
+```
+
+**3. Test Environment Configuration**
+
+The project uses a separate `application-test.properties` configuration:
+- **Database**: H2 in-memory (`jdbc:h2:mem:testdb`)
+- **DDL Strategy**: `create-drop` (fresh schema for each test run)
+- **Flyway**: Disabled for unit/integration tests
+- **Logging**: DEBUG level for application code
+
+```bash
+# Run all tests
+mvn clean test
+
+# Run specific test class
+mvn test -Dtest=InmobiliariaServiceTest
+
+# Run tests with coverage
+mvn clean verify
 ```
 
 ---
