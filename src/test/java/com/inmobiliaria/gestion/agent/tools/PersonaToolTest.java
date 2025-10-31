@@ -80,7 +80,15 @@ class PersonaToolTest {
     Map<String, Object> result = personaTool.getPersonaById(1);
 
     assertThat(result).containsEntry("success", true);
-    assertThat(result.get("persona")).isEqualTo(personaResponse);
+    @SuppressWarnings("unchecked")
+    Map<String, Object> persona = (Map<String, Object>) result.get("persona");
+    assertThat(persona).isNotNull();
+    assertThat(persona.get("id")).isEqualTo(1L);
+    assertThat(persona.get("nombre")).isEqualTo("María");
+    assertThat(persona.get("apellidos")).isEqualTo("Gómez");
+    assertThat(persona.get("email")).isEqualTo("maria@example.com");
+    assertThat(persona.get("rfc")).isEqualTo("GOMM850101AA1");
+    assertThat(persona.get("tipoPersona")).isEqualTo("FISICA");
     verify(personaService).findById(1L);
   }
 
