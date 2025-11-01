@@ -223,7 +223,7 @@ class Phase1IntegrationTest {
               post("/api/agent/chat")
                   .contentType(MediaType.APPLICATION_JSON)
                   .content("{\"message\": \"test\"}"))
-          .andExpect(status().isForbidden()); // 403 because endpoint requires authentication
+          .andExpect(status().isForbidden()); // 403 because no authentication attempted
     }
 
     @Test
@@ -236,7 +236,7 @@ class Phase1IntegrationTest {
                   .contentType(MediaType.APPLICATION_JSON)
                   .content("{\"message\": \"test\"}")
                   .header("Authorization", "Bearer invalid.token.here"))
-          .andExpect(status().isForbidden()); // 403 because token validation fails
+          .andExpect(status().isUnauthorized()); // 401 because token validation fails
     }
 
     @Test
@@ -259,7 +259,7 @@ class Phase1IntegrationTest {
               post("/api/agent/chat")
                   .contentType(MediaType.APPLICATION_JSON)
                   .content("{\"message\": \"test\"}"))
-          .andExpect(status().isForbidden()); // 403 because no authentication provided
+          .andExpect(status().isForbidden()); // 403 because no authentication attempted
     }
 
     @Test
@@ -422,7 +422,7 @@ class Phase1IntegrationTest {
                   .contentType(MediaType.APPLICATION_JSON)
                   .content("{\"message\": \"test\"}")
                   .header("Authorization", "Bearer invalid-format"))
-          .andExpect(status().isForbidden()); // 403 because authentication fails
+          .andExpect(status().isUnauthorized()); // 401 because token validation fails
     }
 
     @Test
@@ -434,7 +434,8 @@ class Phase1IntegrationTest {
                   .contentType(MediaType.APPLICATION_JSON)
                   .content("{\"message\": \"test\"}")
                   .header("Authorization", "some-token"))
-          .andExpect(status().isForbidden()); // 403 because no valid auth
+          .andExpect(
+              status().isForbidden()); // 403 because no authentication attempted (no Bearer prefix)
     }
   }
 
