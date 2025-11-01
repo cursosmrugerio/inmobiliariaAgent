@@ -1,5 +1,7 @@
 # Inmobiliaria AI Agent - Documentation
 
+**Last Updated:** 2025-10-31
+
 ## Overview
 
 This project integrates **Google's Agent Development Kit (ADK)** to provide a conversational AI agent for managing real estate agencies (inmobiliarias) through natural language interactions.
@@ -507,3 +509,22 @@ For issues or questions:
 2. Review Google Cloud logs
 3. Consult ADK documentation
 4. Check project CLAUDE.md for architecture guidelines
+
+---
+
+## Next Steps
+
+**Want to build your own agent?**
+- 🚀 **Fast:** [reference/GENERATOR-QUICK-START.md](reference/GENERATOR-QUICK-START.md) - 2-minute agent generation
+- 📖 **Manual:** [AGENT-DEVELOPMENT-GUIDE.md](AGENT-DEVELOPMENT-GUIDE.md) - Step-by-step guide
+
+**Need to test the system?**
+- 🧪 [reference/README-TESTING.md](reference/README-TESTING.md) - Complete testing workflow
+- 📊 [reference/AGENT-STATUS.md](reference/AGENT-STATUS.md) - Current system status
+
+**Deploying to production?**
+- 🚀 [production/CRITICAL-PRODUCTION-CHECKLIST.md](production/CRITICAL-PRODUCTION-CHECKLIST.md) - Pre-deployment checklist
+- 📦 [production/DEPLOYMENT-PRODUCTION.md](production/DEPLOYMENT-PRODUCTION.md) - Deployment guide
+
+**All Documentation:**
+- 📚 [README.md](README.md) - Complete documentation index
