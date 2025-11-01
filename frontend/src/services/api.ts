@@ -25,7 +25,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
+    // Handle both 401 (Unauthorized) and 403 (Forbidden) as authentication errors
+    // This ensures expired tokens trigger re-login regardless of HTTP status code
+    if (error.response?.status === 401 || error.response?.status === 403) {
       storage.remove('auth_token');
       storage.remove('user');
       window.location.href = '/login';

@@ -54,6 +54,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
       } catch (JwtValidationException | ResourceNotFoundException ex) {
         log.warn("Token JWT inválido: {}", ex.getMessage());
+        // Return 401 Unauthorized for expired/invalid tokens
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response
+            .getWriter()
+            .write("{\"error\":\"Unauthorized\",\"message\":\"" + ex.getMessage() + "\"}");
+        return; // Stop filter chain
       }
     }
 
