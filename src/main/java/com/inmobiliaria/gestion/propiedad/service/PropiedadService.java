@@ -25,10 +25,12 @@ public class PropiedadService {
     this.inmobiliariaRepository = inmobiliariaRepository;
   }
 
+  @Transactional
   public List<PropiedadResponse> findAll() {
     return propiedadRepository.findAll().stream().map(this::toResponse).toList();
   }
 
+  @Transactional
   public List<PropiedadResponse> findAllByInmobiliaria(Long inmobiliariaId) {
     resolveInmobiliaria(inmobiliariaId);
     return propiedadRepository.findByInmobiliariaId(inmobiliariaId).stream()
