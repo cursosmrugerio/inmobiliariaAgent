@@ -80,6 +80,7 @@ jobs:
             --set-env-vars="GOOGLE_CLOUD_LOCATION=${{ env.REGION }}" \
             --set-env-vars="GOOGLE_GENAI_USE_VERTEXAI=true" \
             --set-env-vars="JWT_SECRET=${{ secrets.JWT_SECRET }}" \
+            --set-env-vars="DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" \
             --memory=1Gi \
             --cpu=1 \
             --timeout=300s \
