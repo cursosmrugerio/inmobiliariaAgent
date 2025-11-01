@@ -48,3 +48,5 @@ src/main/resources/static/
 # Google Cloud credentials - NEVER commit
 credentials.json
 **/credentials.json
+
+.mcp.json
