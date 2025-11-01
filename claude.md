@@ -120,3 +120,166 @@ This file serves as a persistent system prompt and contextual guide for any AI a
   - Never commit `credentials.json` to version control (already in `.gitignore`)
   - Use Workload Identity or Cloud Run service accounts in production, not file-based credentials
 
+## 7. Frontend Development Guidelines
+
+The project includes a React + TypeScript frontend located in the `frontend/` directory within the backend project structure. This integration allows the frontend to be served as static resources by Spring Boot in production while maintaining a fast development workflow with hot reload.
+
+### 7.1 Frontend Technology Stack
+
+* **Framework:** React 18.2 with TypeScript 5.2
+* **Build Tool:** Vite 4.4 with Hot Module Replacement (HMR)
+* **UI Library:** Material-UI (MUI) 5.14
+* **Form Management:** React Hook Form 7.65 + Yup 1.7
+* **HTTP Client:** Axios 1.5 with interceptors for JWT authentication
+* **Testing:** Playwright 1.48 for E2E tests
+* **Routing:** React Router DOM 6.15
+
+### 7.2 Development Workflow (CRITICAL)
+
+**There are two distinct development modes. Choose the correct one for your task:**
+
+#### Mode 1: Full Development Mode (RECOMMENDED for all frontend work)
+
+Use this mode when developing React components, forms, UI features, or any frontend code.
+
+**Terminal 1 - Backend:**
+```bash
+cd /path/to/backend
+mvn spring-boot:run
+```
+
+**Terminal 2 - Frontend:**
+```bash
+cd /path/to/backend/frontend
+npm run dev
+```
+
+**Access the application at:** `http://localhost:5173`
+
+**Benefits:**
+- ✅ Instant hot reload (HMR) - changes appear immediately
+- ✅ Fast feedback loop
+- ✅ TypeScript errors shown in real-time
+- ✅ Vite dev server proxies `/api` calls to backend at `localhost:8080`
+- ✅ Best developer experience
+
+**How it works:**
+The Vite dev server runs on port 5173 and serves the React application with HMR. All `/api/*` requests are automatically proxied to the Spring Boot backend running on port 8080. The `vite.config.ts` is configured with file watching using polling (300ms interval) to ensure changes are detected even when running processes in background or with `nohup`.
+
+#### Mode 2: Production-like Mode (ONLY for testing final build)
+
+Use this mode ONLY when testing the production build before deployment.
+
+**Step 1 - Build Frontend:**
+```bash
+cd /path/to/backend/frontend
+npm run build
+```
+
+**Step 2 - Run Backend:**
+```bash
+cd /path/to/backend
+mvn spring-boot:run
+```
+
+**Access the application at:** `http://localhost:8080`
+
+**Important:**
+- ❌ NO hot reload
+- ❌ Must run `npm run build` after EVERY frontend change
+- ❌ Slow development cycle
+- ✅ Use ONLY for production testing before deployment
+
+#### Helper Script (Optional)
+
+For convenience, use the provided script to run both servers concurrently:
+
+```bash
+cd /path/to/backend
+./scripts/dev.sh
+```
+
+This script:
+- Starts both backend and frontend in the background
+- Shows logs from both processes
+- Kills both processes when you press Ctrl+C
+
+### 7.3 Build Configuration
+
+The frontend build is configured to output directly to Spring Boot's static resources directory:
+
+```typescript
+// vite.config.ts
+export default defineConfig({
+  build: {
+    outDir: '../src/main/resources/static',  // Spring Boot serves from here
+    emptyOutDir: true,
+  },
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    watch: {
+      usePolling: true,   // Ensures HMR works even with nohup
+      interval: 300       // Poll every 300ms
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      }
+    }
+  }
+});
+```
+
+**Important Notes:**
+- The `src/main/resources/static/` directory should be in `.gitignore`
+- Only commit source files in `frontend/src/`, never the build output
+- The Vite dev server uses polling to detect file changes, ensuring HMR works reliably
+
+### 7.4 Frontend Architecture Patterns
+
+* **Feature-Based Organization:** Organize code by business domain (e.g., `pages/Propiedades/`, `pages/Inmobiliarias/`) to mirror the backend's DDD structure.
+* **Type Safety First:** Always define TypeScript interfaces that match backend DTOs. Use enums for fixed value sets.
+* **Path Aliases:** Use configured path aliases (`@services`, `@components`, `@hooks`) instead of relative imports.
+* **Service Layer:** Create domain-specific service modules in `src/services/` that wrap Axios calls to backend APIs.
+* **Form Validation:** Use React Hook Form with Yup for all forms. Define validation schemas that mirror backend validation.
+* **Error Handling:** Implement global error handling via Axios interceptors (401 redirects to login, etc.).
+
+### 7.5 AI Assistant Directives for Frontend
+
+* **When developing frontend features:**
+  1. Always use Mode 1 (Full Development Mode) workflow
+  2. Create TypeScript interfaces in `src/types/` that match backend DTOs
+  3. Create service modules in `src/services/` for API integration
+  4. Create page components in `src/pages/[Feature]/`
+  5. Use Material-UI components consistently with the existing design
+  6. Implement forms with React Hook Form + Yup validation
+  7. Add E2E tests in `tests/` using Playwright
+
+* **When modifying frontend code:**
+  1. Read and follow the patterns in existing components
+  2. Use the same styling approach (MUI `sx` prop or styled components)
+  3. Maintain type safety - never use `any` type
+  4. Follow the path alias conventions
+  5. Test changes in the Vite dev server (localhost:5173)
+
+* **Common pitfall to avoid:**
+  - ❌ **NEVER** tell users to run `npm run build` during active development
+  - ❌ **NEVER** suggest using `localhost:8080` for frontend development
+  - ✅ **ALWAYS** recommend Mode 1 (Full Development Mode) for frontend work
+  - ✅ **ALWAYS** recommend `localhost:5173` for development
+
+* **File watching troubleshooting:**
+  If HMR stops working:
+  1. Verify `vite.config.ts` has `watch.usePolling: true` and `interval: 300`
+  2. Restart the Vite dev server: `pkill -f "vite" && npm run dev`
+  3. Hard refresh browser: `Cmd+Shift+R` (Mac) or `Ctrl+Shift+R` (Windows/Linux)
+
+### 7.6 Frontend Development Resources
+
+For comprehensive frontend development guidance, refer to:
+- `DEVELOPMENT-WORKFLOW.md` - Detailed explanation of development modes and workflows
+- `frontend/README.md` - Frontend-specific documentation (if exists)
+- `inmobiliaria-frontend-expert` skill - Claude Code skill for React/TypeScript patterns
+
